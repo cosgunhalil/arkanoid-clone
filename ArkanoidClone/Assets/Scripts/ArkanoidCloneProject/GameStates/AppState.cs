@@ -1,66 +1,40 @@
-namespace ArkanoidProject.State 
-{
-    using Devkit.Base.Component;
-    using Devkit.HSM;
-    using System;
+using ArkanoidCloneProject.Factories.StateFactory;
+using Devkit.HSM;
+using VContainer;
 
+namespace ArkanoidProject.State
+{
     public class AppState : StateMachine
     {
-        private MainMenuState mainMenuState;
-        private InGameState inGameState;
-        private EndGameState endGameState;
-        private PauseGameState pauseGameState;
+        private IStateFactory _stateFactory;
 
-        public AppState(ComponentContainer componentContainer) 
+        [Inject]
+        public AppState(IStateFactory stateFactory)
         {
-            mainMenuState = new MainMenuState();
-            inGameState = new InGameState();
-            endGameState = new EndGameState();
-            pauseGameState = new PauseGameState();
-
-            AddSubState(mainMenuState);
-            AddSubState(inGameState);
-            AddSubState(endGameState);
-            AddSubState(pauseGameState);
-
-            SetupMainMenuTransitions();
-            SetupInGameTransitions();
-            SetupEndGameTransitions();
-            SetupPauseGameTransitions();
-            SetupPauseGameTransitions();
-        }
-
-        private void SetupMainMenuTransitions()
-        {
-            mainMenuState.AddTransition(mainMenuState, inGameState, (int)StateTriggers.START_GAME_REQUEST);
-        }
-
-        private void SetupInGameTransitions()
-        {
-            inGameState.AddTransition(inGameState, endGameState, (int)StateTriggers.GAME_OVER_REQUEST);
-            inGameState.AddTransition(inGameState, pauseGameState, (int)StateTriggers.PAUSE_GAME_REQUEST);
-        }
-
-        private void SetupEndGameTransitions()
-        {
-            endGameState.AddTransition(endGameState, mainMenuState, (int)StateTriggers.RETURN_TO_MAIN_MENU_REQUEST);
-        }
-
-        private void SetupPauseGameTransitions()
-        {
-            pauseGameState.AddTransition(pauseGameState, mainMenuState, (int)StateTriggers.RETURN_TO_MAIN_MENU_REQUEST);
-            pauseGameState.AddTransition(pauseGameState, inGameState, (int)StateTriggers.CONTINUE_GAME_REQUEST);
+            _stateFactory = stateFactory;
         }
 
         protected override void OnEnter()
         {
-            //TODO: handle
+            BuildHierarchy();
         }
 
-        protected override void OnExit()
+        private void BuildHierarchy()
         {
-            //TODO: handle
+            var mainMenuState = _stateFactory.Create<MainMenuState>();
+            var inGameState = _stateFactory.Create<InGameState>();
+            var pauseState = _stateFactory.Create<PauseGameState>();
+            var endGameState = _stateFactory.Create<EndGameState>();
+
+            AddSubState(mainMenuState);
+            AddSubState(inGameState);
+            AddSubState(pauseState);
+            AddSubState(endGameState);
+
+            AddTransition(mainMenuState, inGameState, (int)StateTriggers.START_GAME_REQUEST);
+            AddTransition(mainMenuState, pauseState, (int)StateTriggers.PAUSE_GAME_REQUEST);
+            AddTransition(pauseState, inGameState, (int)StateTriggers.CONTINUE_GAME_REQUEST);
+            AddTransition(inGameState, endGameState, (int)StateTriggers.GAME_OVER_REQUEST);
         }
     }
 }
-
