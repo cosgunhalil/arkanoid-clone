@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace ArkanoidProject.State 
 {
     using Devkit.HSM;
@@ -6,12 +8,17 @@ namespace ArkanoidProject.State
     {
         protected override void OnEnter()
         {
-            //TODO: handle
+            Debug.Log("EndGameState.OnEnter");
+        }
+
+        protected override void OnUpdate()
+        {
+            Debug.Log("EndGameState.OnUpdate");
         }
 
         protected override void OnExit()
         {
-            //TODO: handle
+            Debug.Log("EndGameState.OnExit");
         }
     }
 }
