@@ -1,0 +1,113 @@
+{
+    "levelName": "Level1",
+    "gridSize": {
+        "rows": 5,
+        "columns": 5
+    },
+    "tileSize": {
+        "x": 1.0,
+        "y": 0.5
+    },
+    "tiles": [
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": true
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": true
+        },
+        {
+            "typeIndex": 4,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 3,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": true
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 2,
+            "hasPowerUp": false
+        }
+    ]
+}
