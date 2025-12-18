@@ -1,11 +1,14 @@
 using ArkanoidCloneProject.Controllers.Scripts;
 using ArkanoidCloneProject.Factories.StateFactory;
+using ArkanoidCloneProject.LevelEditor;
 using ArkanoidProject.State;
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
 public class GameLifetimeScope : VContainer.Unity.LifetimeScope
 {
+    [SerializeField] private LevelCreator levelCreatorPrefab;
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<VContainerStateFactory>(Lifetime.Singleton).As<IStateFactory>();
@@ -15,6 +18,7 @@ public class GameLifetimeScope : VContainer.Unity.LifetimeScope
         builder.Register<InGameState>(Lifetime.Transient);
         builder.Register<PauseGameState>(Lifetime.Transient);
         builder.Register<EndGameState>(Lifetime.Transient);
+        builder.RegisterComponentInNewPrefab<LevelCreator>(levelCreatorPrefab, Lifetime.Singleton);
             
         Debug.Log("GameLifetimeScope Configure");
     }

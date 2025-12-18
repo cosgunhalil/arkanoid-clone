@@ -18,7 +18,7 @@ MonoBehaviour:
     editorColor: {r: 1, g: 1, b: 1, a: 1}
   - name: Yellow
     prefab: {fileID: 3716327339288125210, guid: 3608924379d6b05459daede94f28b210, type: 3}
-    editorColor: {r: 1, g: 0.9371229, b: 0, a: 0}
+    editorColor: {r: 1, g: 0.9371229, b: 0, a: 1}
   - name: Orange
     prefab: {fileID: 3716327339288125210, guid: 3608924379d6b05459daede94f28b210, type: 3}
     editorColor: {r: 1, g: 0.49459833, b: 0, a: 1}

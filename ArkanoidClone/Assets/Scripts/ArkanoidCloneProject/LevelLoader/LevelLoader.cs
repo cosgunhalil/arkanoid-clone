@@ -55,11 +55,7 @@ namespace ArkanoidCloneProject.LevelEditor
 
                             if (tile.hasPowerUp)
                             {
-                                var powerUpHolder = obj.GetComponent<IPowerUpHolder>();
-                                if (powerUpHolder != null)
-                                {
-                                    powerUpHolder.SetHasPowerUp(true);
-                                }
+                                //TODO: Handle
                             }
 
                             _spawnedTiles.Add(obj);
@@ -85,11 +81,5 @@ namespace ArkanoidCloneProject.LevelEditor
         {
             return JsonUtility.FromJson<LevelData>(json);
         }
-    }
-
-    public interface IPowerUpHolder
-    {
-        void SetHasPowerUp(bool value);
-        bool HasPowerUp { get; }
     }
 }

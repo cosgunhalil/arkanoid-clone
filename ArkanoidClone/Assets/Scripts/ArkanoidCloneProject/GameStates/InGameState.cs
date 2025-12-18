@@ -1,4 +1,6 @@
+using ArkanoidCloneProject.LevelEditor;
 using UnityEngine;
+using VContainer;
 
 namespace ArkanoidProject.State 
 {
@@ -6,9 +8,11 @@ namespace ArkanoidProject.State
 
     public class InGameState : StateMachine
     {
-        protected override void OnEnter()
+        [Inject] private LevelCreator _levelCreator;
+        protected override async void OnEnter()
         {
             Debug.Log("InGameState.OnEnter");
+            await _levelCreator.LoadAndCreateLevelAsync("Level1");
         }
 
         protected override void OnExit()
