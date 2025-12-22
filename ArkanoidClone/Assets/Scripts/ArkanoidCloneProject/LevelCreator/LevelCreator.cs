@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -14,6 +15,11 @@ namespace ArkanoidCloneProject.LevelEditor
         private LevelData _currentLevelData;
         private List<GameObject> _spawnedTiles = new List<GameObject>();
         private AsyncOperationHandle<TextAsset> _levelAssetHandle;
+        private LevelBounds _levelBounds;
+
+        public event Action<LevelBounds> OnLevelCreated;
+
+        public LevelBounds LevelBounds => _levelBounds;
 
         public async UniTask LoadAndCreateLevelAsync(string levelAddress)
         {
@@ -67,7 +73,6 @@ namespace ArkanoidCloneProject.LevelEditor
 
                             if (tile.hasPowerUp)
                             {
-                                //TODO: handle
                             }
 
                             _spawnedTiles.Add(tileObject);
@@ -75,6 +80,44 @@ namespace ArkanoidCloneProject.LevelEditor
                     }
                 }
             }
+
+            CalculateLevelBounds(horizontalSpacing, verticalSpacing);
+            OnLevelCreated?.Invoke(_levelBounds);
+        }
+
+        private void CalculateLevelBounds(float horizontalSpacing, float verticalSpacing)
+        {
+            if (_currentLevelData == null)
+            {
+                _levelBounds = new LevelBounds(Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero);
+                return;
+            }
+
+            Transform container = _levelContainer != null ? _levelContainer : transform;
+            Vector3 containerPosition = container.position;
+
+            float tileWidth = _currentLevelData.tileSize.x;
+            float tileHeight = _currentLevelData.tileSize.y;
+            int rows = _currentLevelData.gridSize.rows;
+            int columns = _currentLevelData.gridSize.columns;
+
+            float totalWidth = columns * tileWidth + (columns - 1) * horizontalSpacing;
+            float totalHeight = rows * tileHeight + (rows - 1) * verticalSpacing;
+
+            float halfTileWidth = tileWidth / 2f;
+            float halfTileHeight = tileHeight / 2f;
+
+            float leftEdge = containerPosition.x - halfTileWidth;
+            float rightEdge = containerPosition.x + totalWidth - halfTileWidth;
+            float topEdge = containerPosition.y + halfTileHeight;
+            float bottomEdge = containerPosition.y - totalHeight + halfTileHeight;
+
+            Vector2 topLeft = new Vector2(leftEdge, topEdge);
+            Vector2 topRight = new Vector2(rightEdge, topEdge);
+            Vector2 bottomLeft = new Vector2(leftEdge, bottomEdge);
+            Vector2 bottomRight = new Vector2(rightEdge, bottomEdge);
+
+            _levelBounds = new LevelBounds(topLeft, topRight, bottomLeft, bottomRight);
         }
 
         public void ClearLevel()
