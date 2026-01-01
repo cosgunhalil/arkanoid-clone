@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3054433727030800744
+--- !u!1 &6825311189393173705
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5204779823960213224}
-  - component: {fileID: 5452530789567201329}
+  - component: {fileID: 6909042049013117637}
+  - component: {fileID: 5768769884125775433}
   m_Layer: 0
-  m_Name: GameLifetimeScope
+  m_Name: BorderManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5204779823960213224
+--- !u!4 &6909042049013117637
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3054433727030800744}
+  m_GameObject: {fileID: 6825311189393173705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,22 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5452530789567201329
+--- !u!114 &5768769884125775433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3054433727030800744}
+  m_GameObject: {fileID: 6825311189393173705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44cb3991c2825b742af1ff3a92a6f652, type: 3}
+  m_Script: {fileID: 11500000, guid: dfdbaf1de34147d4e855432fa5456319, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LifetimeScope.GameLifetimeScope
-  parentReference:
-    TypeName: 
-  autoRun: 1
-  autoInjectGameObjects: []
-  levelCreatorPrefab: {fileID: 2525698576857657694, guid: ebea5abbd56f8e94fa421ef3e454777d, type: 3}
-  cameraManagerPrefab: {fileID: 1166678935054850929, guid: 9955ed1382405d54ab3bc1a19b11d333, type: 3}
-  borderManagerPrefab: {fileID: 5768769884125775433, guid: 407e1a86fda3346418123e064a89c1ef, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::ArkanoidCloneProject.LevelEditor.BorderManager
+  _wallThickness: 1

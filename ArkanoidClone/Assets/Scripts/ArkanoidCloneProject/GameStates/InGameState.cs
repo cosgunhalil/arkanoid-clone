@@ -10,6 +10,7 @@ namespace ArkanoidProject.State
     {
         [Inject] private LevelCreator _levelCreator;
         [Inject] private CameraManager _cameraManager;
+        [Inject] private BorderManager _borderManager;
 
         protected override async void OnEnter()
         {
@@ -17,6 +18,7 @@ namespace ArkanoidProject.State
 
             _levelCreator.OnLevelCreated += HandleLevelCreated;
             await _levelCreator.LoadAndCreateLevelAsync("Level1");
+            
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -36,6 +38,8 @@ namespace ArkanoidProject.State
             Debug.Log($"Level Bounds - BottomLeft: {levelBounds.BottomLeft}, BottomRight: {levelBounds.BottomRight}");
             Debug.Log($"Level Bounds - Center: {levelBounds.Center}");
             Debug.Log($"Playable Area Center: {_cameraManager.PlayableAreaCenter}");
+            
+            _borderManager.CreateBorders();
         }
 
         private float CalculateWorldHeight()
