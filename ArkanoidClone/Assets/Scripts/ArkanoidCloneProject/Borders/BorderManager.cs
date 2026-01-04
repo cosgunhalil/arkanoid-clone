@@ -96,9 +96,9 @@ namespace ArkanoidCloneProject.LevelEditor
             GameObject wall = new GameObject(wallName);
             wall.transform.SetParent(_wallContainer);
             wall.transform.position = position;
-            wall.layer = LayerMask.NameToLayer("Wall");
+            wall.tag = "Wall";
             
-            BoxCollider2D collider = wall.AddComponent<BoxCollider2D>();
+            var collider = wall.AddComponent<BoxCollider2D>();
             collider.size = size;
             
             if (_wallPhysicsMaterial != null)

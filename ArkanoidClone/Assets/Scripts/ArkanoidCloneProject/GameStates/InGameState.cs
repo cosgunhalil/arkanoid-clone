@@ -1,3 +1,4 @@
+using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using UnityEngine;
 using VContainer;
@@ -11,6 +12,7 @@ namespace ArkanoidProject.State
         [Inject] private LevelCreator _levelCreator;
         [Inject] private CameraManager _cameraManager;
         [Inject] private BorderManager _borderManager;
+        [Inject] private IInputManager _inputSystem;
 
         protected override async void OnEnter()
         {
@@ -18,7 +20,13 @@ namespace ArkanoidProject.State
 
             _levelCreator.OnLevelCreated += HandleLevelCreated;
             await _levelCreator.LoadAndCreateLevelAsync("Level1");
+            _inputSystem.OnLeftButtonDown += InputSystemOnOnLeftButtonDown;
             
+        }
+
+        private void InputSystemOnOnLeftButtonDown()
+        {
+            Debug.Log("InGameState.OnLeftButtonDown");
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
