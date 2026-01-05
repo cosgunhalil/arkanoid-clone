@@ -51,3 +51,4 @@ MonoBehaviour:
   levelCreatorPrefab: {fileID: 2525698576857657694, guid: ebea5abbd56f8e94fa421ef3e454777d, type: 3}
   cameraManagerPrefab: {fileID: 1166678935054850929, guid: 9955ed1382405d54ab3bc1a19b11d333, type: 3}
   borderManagerPrefab: {fileID: 5768769884125775433, guid: 407e1a86fda3346418123e064a89c1ef, type: 3}
+  paddlePrefab: {fileID: 9104000081622545113, guid: 3faf1eeef6374204f9638f03408b9029, type: 3}

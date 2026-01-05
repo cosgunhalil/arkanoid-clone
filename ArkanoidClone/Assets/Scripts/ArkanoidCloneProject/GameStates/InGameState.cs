@@ -1,5 +1,6 @@
 using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
+using ArkanoidCloneProject.Paddle;
 using UnityEngine;
 using VContainer;
 
@@ -13,6 +14,7 @@ namespace ArkanoidProject.State
         [Inject] private CameraManager _cameraManager;
         [Inject] private BorderManager _borderManager;
         [Inject] private IInputManager _inputSystem;
+        [Inject] private PaddlePlacer _paddlePlacer;
 
         protected override async void OnEnter()
         {
@@ -20,13 +22,6 @@ namespace ArkanoidProject.State
 
             _levelCreator.OnLevelCreated += HandleLevelCreated;
             await _levelCreator.LoadAndCreateLevelAsync("Level1");
-            _inputSystem.OnLeftButtonDown += InputSystemOnOnLeftButtonDown;
-            
-        }
-
-        private void InputSystemOnOnLeftButtonDown()
-        {
-            Debug.Log("InGameState.OnLeftButtonDown");
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -48,6 +43,7 @@ namespace ArkanoidProject.State
             Debug.Log($"Playable Area Center: {_cameraManager.PlayableAreaCenter}");
             
             _borderManager.CreateBorders();
+            _paddlePlacer.Place();
         }
 
         private float CalculateWorldHeight()
@@ -68,6 +64,7 @@ namespace ArkanoidProject.State
             Debug.Log("InGameState.OnExit");
 
             _levelCreator.OnLevelCreated -= HandleLevelCreated;
+            _paddlePlacer.RemovePaddle();
         }
 
         protected override void OnUpdate()

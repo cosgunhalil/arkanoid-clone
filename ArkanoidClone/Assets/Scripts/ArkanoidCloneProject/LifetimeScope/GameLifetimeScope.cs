@@ -2,6 +2,7 @@ using ArkanoidCloneProject.Controllers.Scripts;
 using ArkanoidCloneProject.Factories.StateFactory;
 using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
+using ArkanoidCloneProject.Paddle;
 using ArkanoidProject.State;
 using UnityEngine;
 using VContainer;
@@ -14,6 +15,8 @@ namespace ArkanoidCloneProject.LifetimeScope
         [SerializeField] private LevelCreator levelCreatorPrefab;
         [SerializeField] private CameraManager cameraManagerPrefab;
         [SerializeField] private BorderManager borderManagerPrefab;
+        [SerializeField] private GameObject paddlePrefab;
+        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<VContainerStateFactory>(Lifetime.Singleton).As<IStateFactory>();
@@ -27,6 +30,9 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.RegisterComponentInNewPrefab<CameraManager>(cameraManagerPrefab, Lifetime.Singleton);
             builder.RegisterComponentInNewPrefab<BorderManager>(borderManagerPrefab, Lifetime.Singleton);
             
+            builder.RegisterInstance(paddlePrefab).As<GameObject>();
+            builder.Register<PaddleFactory>(Lifetime.Singleton).As<IPaddleFactory>();
+            builder.Register<PaddlePlacer>(Lifetime.Singleton);
             
             Debug.Log("GameLifetimeScope Configure");
         }
