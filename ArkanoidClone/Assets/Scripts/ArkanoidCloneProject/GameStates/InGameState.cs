@@ -1,6 +1,7 @@
 using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
+using ArkanoidCloneProject.Physics;
 using UnityEngine;
 using VContainer;
 
@@ -15,12 +16,23 @@ namespace ArkanoidProject.State
         [Inject] private BorderManager _borderManager;
         [Inject] private IInputManager _inputSystem;
         [Inject] private PaddlePlacer _paddlePlacer;
+        [Inject] private BallManager _ballManager;
+        [Inject] private BrickManager _brickManager;
+        [Inject] private ArkanoidPhysicsWorld _physicsWorld;
+
+        private Ball _currentBall;
+        private bool _ballLaunched;
 
         protected override async void OnEnter()
         {
             Debug.Log("InGameState.OnEnter");
 
             _levelCreator.OnLevelCreated += HandleLevelCreated;
+            _ballManager.OnAllBallsLost += HandleAllBallsLost;
+            _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
+            _brickManager.OnScoreChanged += HandleScoreChanged;
+            _inputSystem.OnSpaceButtonDown += HandleSpacePressed;
+            
             await _levelCreator.LoadAndCreateLevelAsync("Level1");
         }
 
@@ -44,6 +56,45 @@ namespace ArkanoidProject.State
             
             _borderManager.CreateBorders();
             _paddlePlacer.Place();
+            
+            _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedTiles());
+            
+            SpawnBall();
+        }
+
+        private void SpawnBall()
+        {
+            Paddle paddle = _paddlePlacer.GetCurrentPaddle();
+            if (paddle != null)
+            {
+                _currentBall = _ballManager.SpawnBallAbovePaddle(paddle.transform);
+                _ballLaunched = false;
+            }
+        }
+
+        private void HandleSpacePressed()
+        {
+            if (_currentBall != null && !_ballLaunched)
+            {
+                _ballManager.LaunchBallUpward(_currentBall);
+                _ballLaunched = true;
+            }
+        }
+
+        private void HandleAllBallsLost()
+        {
+            Debug.Log("All balls lost!");
+            SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
+        }
+
+        private void HandleAllBricksDestroyed()
+        {
+            Debug.Log("Level Complete!");
+        }
+
+        private void HandleScoreChanged(int newScore)
+        {
+            Debug.Log($"Score: {newScore}");
         }
 
         private float CalculateWorldHeight()
@@ -64,12 +115,31 @@ namespace ArkanoidProject.State
             Debug.Log("InGameState.OnExit");
 
             _levelCreator.OnLevelCreated -= HandleLevelCreated;
+            _ballManager.OnAllBallsLost -= HandleAllBallsLost;
+            _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
+            _brickManager.OnScoreChanged -= HandleScoreChanged;
+            _inputSystem.OnSpaceButtonDown -= HandleSpacePressed;
+            
+            _ballManager.RemoveAllBalls();
+            _brickManager.UnregisterAllBricks();
             _paddlePlacer.RemovePaddle();
         }
 
         protected override void OnUpdate()
         {
-            Debug.Log("InGameState.OnUpdate");
+            if (_currentBall != null && !_ballLaunched)
+            {
+                Paddle paddle = _paddlePlacer.GetCurrentPaddle();
+                if (paddle != null)
+                {
+                    Vector2 paddlePos = paddle.transform.position;
+                    _currentBall.Position = paddlePos + Vector2.up * 0.5f;
+                }
+            }
+            else
+            {
+                _physicsWorld.Tick();
+            }
         }
     }
 }

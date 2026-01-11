@@ -52,3 +52,5 @@ MonoBehaviour:
   cameraManagerPrefab: {fileID: 1166678935054850929, guid: 9955ed1382405d54ab3bc1a19b11d333, type: 3}
   borderManagerPrefab: {fileID: 5768769884125775433, guid: 407e1a86fda3346418123e064a89c1ef, type: 3}
   paddlePrefab: {fileID: 9104000081622545113, guid: 3faf1eeef6374204f9638f03408b9029, type: 3}
+  ballPrefab: {fileID: 2388668340438228029, guid: 681fa87c73267f2498b56456737b4bd5, type: 3}
+  physicsSettings: {fileID: 11400000, guid: dc7c5b114cd4f4143adc2446a02912be, type: 2}

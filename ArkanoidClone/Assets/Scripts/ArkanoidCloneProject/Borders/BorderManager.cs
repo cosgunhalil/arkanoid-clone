@@ -98,12 +98,12 @@ namespace ArkanoidCloneProject.LevelEditor
             wall.transform.position = position;
             wall.tag = "Wall";
             
-            var collider = wall.AddComponent<BoxCollider2D>();
-            collider.size = size;
+            var colliderComponent = wall.AddComponent<BoxCollider2D>();
+            colliderComponent.size = size;
             
             if (_wallPhysicsMaterial != null)
             {
-                collider.sharedMaterial = _wallPhysicsMaterial;
+                colliderComponent.sharedMaterial = _wallPhysicsMaterial;
             }
             
             return wall;
