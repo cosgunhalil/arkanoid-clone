@@ -30,7 +30,7 @@ namespace ArkanoidProject.State
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
             
-            await _levelCreator.LoadAndCreateLevelAsync("Level1");
+            await _levelCreator.LoadAndCreateLevelAsync("Level2");
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -109,10 +109,6 @@ namespace ArkanoidProject.State
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
             _paddlePlacer.RemovePaddle();
-        }
-
-        protected override void OnUpdate()
-        {
         }
     }
 }

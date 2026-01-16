@@ -1,0 +1,493 @@
+{
+    "levelName": "Level2",
+    "gridSize": {
+        "rows": 8,
+        "columns": 15
+    },
+    "tileSize": {
+        "x": 1.0,
+        "y": 0.5
+    },
+    "tiles": [
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": 0,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        },
+        {
+            "typeIndex": -1,
+            "hasPowerUp": false
+        }
+    ]
+}

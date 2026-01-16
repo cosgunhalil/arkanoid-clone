@@ -14,7 +14,7 @@ namespace ArkanoidCloneProject.LevelEditor
         [SerializeField] private Transform _levelContainer;
 
         private LevelData _currentLevelData;
-        private List<GameObject> _spawnedBricks = new List<GameObject>();
+        private List<Brick> _spawnedBricks = new List<Brick>();
         private AsyncOperationHandle<TextAsset> _levelAssetHandle;
         private LevelBounds _levelBounds;
 
@@ -72,14 +72,15 @@ namespace ArkanoidCloneProject.LevelEditor
                             tileObject.transform.localPosition = position;
                             tileObject.transform.localScale = new Vector2(_currentLevelData.tileSize.x, _currentLevelData.tileSize.y);
                             tileObject.AddComponent<BoxCollider2D>();
-                            tileObject.AddComponent<Brick>();
                             tileObject.tag = "Brick";
+                            var brick = tileObject.AddComponent<Brick>();
 
                             if (tile.hasPowerUp)
                             {
+                                brick.SetRandomPowerUp();
                             }
 
-                            _spawnedBricks.Add(tileObject);
+                            _spawnedBricks.Add(brick);
                         }
                     }
                 }
@@ -141,7 +142,7 @@ namespace ArkanoidCloneProject.LevelEditor
             return _currentLevelData;
         }
 
-        public List<GameObject> GetSpawnedBricks()
+        public List<Brick> GetSpawnedBricks()
         {
             return _spawnedBricks;
         }

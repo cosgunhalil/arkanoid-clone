@@ -22,23 +22,19 @@ namespace ArkanoidCloneProject.Physics
             _totalScore = 0;
         }
 
-        public void RegisterBrick(Brick brick)
+        public void RegisterBricksFromGameObjects(List<Brick> brickObjects)
+        {
+            var count = brickObjects.Count;
+            for (var i = 0; i < count; i++)
+            {
+                RegisterBrick(brickObjects[i]);
+            }
+        }
+        
+        private void RegisterBrick(Brick brick)
         {
             _activeBricks.Add(brick);
             brick.OnBrickDestroyed += HandleBrickDestroyed;
-        }
-
-        public void RegisterBricksFromGameObjects(List<GameObject> brickObjects)
-        {
-            int count = brickObjects.Count;
-            for (int i = 0; i < count; i++)
-            {
-                Brick brick = brickObjects[i].GetComponent<Brick>();
-                if (brick != null)
-                {
-                    RegisterBrick(brick);
-                }
-            }
         }
 
         private void HandleBrickDestroyed(Brick brick)

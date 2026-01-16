@@ -60,5 +60,10 @@ namespace ArkanoidCloneProject.Physics
         {
             _scoreValue = value;
         }
+
+        public void SetRandomPowerUp()
+        {
+            //TODO: implement!
+        }
     }
 }
