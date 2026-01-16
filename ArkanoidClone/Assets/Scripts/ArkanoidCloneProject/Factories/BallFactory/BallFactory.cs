@@ -21,6 +21,7 @@ namespace ArkanoidCloneProject.Physics
             GameObject ballObject = Object.Instantiate(_ballPrefab, position, Quaternion.identity);
             Ball ball = ballObject.GetComponent<Ball>();
             _resolver.Inject(ball);
+            ball.Initialiaze();
             return ball;
         }
     }

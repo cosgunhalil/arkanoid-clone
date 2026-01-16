@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using VContainer;
 
 namespace ArkanoidCloneProject.Physics
 {
     public class BrickManager
     {
-        private readonly ArkanoidPhysicsWorld _physicsWorld;
-        private readonly IObjectResolver _resolver;
         private readonly List<Brick> _activeBricks;
         private int _totalScore;
 
@@ -19,18 +16,14 @@ namespace ArkanoidCloneProject.Physics
         public int ActiveBrickCount => _activeBricks.Count;
         public int TotalScore => _totalScore;
 
-        [Inject]
-        public BrickManager(ArkanoidPhysicsWorld physicsWorld, IObjectResolver resolver)
+        public BrickManager()
         {
-            _physicsWorld = physicsWorld;
-            _resolver = resolver;
             _activeBricks = new List<Brick>();
             _totalScore = 0;
         }
 
         public void RegisterBrick(Brick brick)
         {
-            _resolver.Inject(brick);
             _activeBricks.Add(brick);
             brick.OnBrickDestroyed += HandleBrickDestroyed;
         }

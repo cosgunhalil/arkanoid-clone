@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6244928815478977655}
   - component: {fileID: 3529232565189878458}
   - component: {fileID: 4917987985539574519}
+  - component: {fileID: -8034381592297215489}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -140,4 +141,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1caabba56e674d447b607d5000c70ce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArkanoidCloneProject.Physics.Ball
-  _radius: 0.2
+  _speed: 8
+  _maxPaddleBounceAngle: 75
+  _skinWidth: 0.01
+  _paddleOffsetY: 0.5
+--- !u!50 &-8034381592297215489
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2388668340438228029}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0

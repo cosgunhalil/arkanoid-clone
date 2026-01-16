@@ -43,10 +43,10 @@ namespace ArkanoidCloneProject.LevelEditor
             CameraBounds cameraBounds = GetCameraBounds();
             LevelBounds levelBounds = _cameraManager.BoundsWithMargins;
             
-            _topWall = CreateWall("TopWall", GetTopWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
-            _bottomWall = CreateWall("BottomWall", GetBottomWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
-            _leftWall = CreateWall("LeftWall", GetLeftWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
-            _rightWall = CreateWall("RightWall", GetRightWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
+            _topWall = CreateWall("Wall", GetTopWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _bottomWall = CreateWall("Wall", GetBottomWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _leftWall = CreateWall("Wall", GetLeftWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
+            _rightWall = CreateWall("Wall", GetRightWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
         }
 
         public void ClearBorders()

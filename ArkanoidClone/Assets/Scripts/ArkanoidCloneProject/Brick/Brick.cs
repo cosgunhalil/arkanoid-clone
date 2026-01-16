@@ -1,66 +1,33 @@
 using System;
 using UnityEngine;
-using VContainer;
 
 namespace ArkanoidCloneProject.Physics
 {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class Brick : MonoBehaviour, IPhysicsBody
+    public class Brick : MonoBehaviour
     {
         [SerializeField] private int _health = 1;
         [SerializeField] private int _scoreValue = 10;
         
         private BoxCollider2D _collider;
-        private ArkanoidPhysicsWorld _physicsWorld;
         private int _currentHealth;
 
         public event Action<Brick> OnBrickDestroyed;
         public event Action<Brick, int> OnBrickDamaged;
 
-        public Vector2 Position
-        {
-            get => transform.position;
-            set => transform.position = value;
-        }
-
-        public Vector2 Velocity
-        {
-            get => Vector2.zero;
-            set { }
-        }
-
-        public float Radius => 0f;
-        public PhysicsBodyType BodyType => PhysicsBodyType.Brick;
-        public Collider2D Collider => _collider;
-        public bool IsActive => gameObject.activeInHierarchy;
         public int Health => _currentHealth;
         public int ScoreValue => _scoreValue;
-
-        [Inject]
-        public void Construct(ArkanoidPhysicsWorld physicsWorld)
-        {
-            _physicsWorld = physicsWorld;
-        }
 
         private void Awake()
         {
             _collider = GetComponent<BoxCollider2D>();
             _currentHealth = _health;
+            gameObject.tag = "Brick";
         }
 
-        private void OnEnable()
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            _physicsWorld?.RegisterBody(this);
-        }
-
-        private void OnDisable()
-        {
-            _physicsWorld?.UnregisterBody(this);
-        }
-
-        public void OnCollision(CollisionData data)
-        {
-            if (data.OtherBodyType != PhysicsBodyType.Ball) return;
+            if (collision.gameObject.GetComponent<Ball>() == null) return;
             
             TakeDamage(1);
         }
@@ -72,14 +39,13 @@ namespace ArkanoidCloneProject.Physics
             
             if (_currentHealth <= 0)
             {
-                Destroy();
+                DestroyBrick();
             }
         }
 
-        private void Destroy()
+        private void DestroyBrick()
         {
             OnBrickDestroyed?.Invoke(this);
-            _physicsWorld?.UnregisterBody(this);
             gameObject.SetActive(false);
         }
 

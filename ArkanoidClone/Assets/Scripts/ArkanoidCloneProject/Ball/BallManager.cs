@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ArkanoidCloneProject.LevelEditor;
+using ArkanoidCloneProject.Paddle;
 using UnityEngine;
 using VContainer;
 
@@ -9,8 +10,7 @@ namespace ArkanoidCloneProject.Physics
     public class BallManager
     {
         private readonly IBallFactory _ballFactory;
-        private readonly ArkanoidPhysicsWorld _physicsWorld;
-        private readonly PhysicsSettings _settings;
+        private readonly BallSettings _settings;
         private readonly CameraManager _cameraManager;
         private readonly List<Ball> _activeBalls;
 
@@ -22,51 +22,44 @@ namespace ArkanoidCloneProject.Physics
         [Inject]
         public BallManager(
             IBallFactory ballFactory, 
-            ArkanoidPhysicsWorld physicsWorld, 
-            PhysicsSettings settings,
+            BallSettings settings,
             CameraManager cameraManager)
         {
             _ballFactory = ballFactory;
-            _physicsWorld = physicsWorld;
             _settings = settings;
             _cameraManager = cameraManager;
             _activeBalls = new List<Ball>();
-            
-            _physicsWorld.OnBallLost += HandleBallLost;
         }
 
-        public Ball SpawnBall(Vector2 position)
+        public Ball SpawnBall(Vector2 position, Paddle.Paddle paddle)
         {
             Ball ball = _ballFactory.Create(position);
+            ball.SetPaddle(paddle);
+            ball.SetSpeed(_settings.BallSpeed);
+            ball.OnBallDeath += () => HandleBallDeath(ball);
             _activeBalls.Add(ball);
             OnBallSpawned?.Invoke(ball);
             return ball;
         }
 
-        public Ball SpawnBallAbovePaddle(Transform paddleTransform, float offsetY = 0.5f)
+        public Ball SpawnBallAbovePaddle(Paddle.Paddle paddle, float offsetY = 0.5f)
         {
-            Vector2 spawnPosition = (Vector2)paddleTransform.position + Vector2.up * offsetY;
-            return SpawnBall(spawnPosition);
+            Vector2 spawnPosition = (Vector2)paddle.transform.position + Vector2.up * offsetY;
+            return SpawnBall(spawnPosition, paddle);
+        }
+
+        public void LaunchBall(Ball ball)
+        {
+            ball.Launch();
         }
 
         public void LaunchBall(Ball ball, Vector2 direction)
         {
-            ball.Launch(direction, _settings.BallSpeed);
+            ball.Launch(direction);
         }
 
-        public void LaunchBallUpward(Ball ball)
+        private void HandleBallDeath(Ball ball)
         {
-            float randomAngle = UnityEngine.Random.Range(-30f, 30f);
-            float angleRadians = randomAngle * Mathf.Deg2Rad;
-            Vector2 direction = new Vector2(Mathf.Sin(angleRadians), Mathf.Cos(angleRadians));
-            LaunchBall(ball, direction);
-        }
-
-        private void HandleBallLost(IPhysicsBody body)
-        {
-            Ball ball = body as Ball;
-            if (ball == null) return;
-            
             _activeBalls.Remove(ball);
             UnityEngine.Object.Destroy(ball.gameObject);
             

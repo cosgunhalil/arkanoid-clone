@@ -18,7 +18,7 @@ namespace ArkanoidCloneProject.LifetimeScope
         [SerializeField] private BorderManager borderManagerPrefab;
         [SerializeField] private GameObject paddlePrefab;
         [SerializeField] private GameObject ballPrefab;
-        [SerializeField] private PhysicsSettings physicsSettings;
+        [SerializeField] private BallSettings ballSettings;
         
         protected override void Configure(IContainerBuilder builder)
         {
@@ -37,7 +37,8 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.Register<PaddleFactory>(Lifetime.Singleton).As<IPaddleFactory>();
             builder.Register<PaddlePlacer>(Lifetime.Singleton);
             
-            PhysicsInstaller.Install(builder, physicsSettings, ballPrefab);
+            builder.Register<BrickManager>(Lifetime.Singleton);
+            BallInstaller.Install(builder, ballSettings, ballPrefab);
             
             Debug.Log("GameLifetimeScope Configure");
         }

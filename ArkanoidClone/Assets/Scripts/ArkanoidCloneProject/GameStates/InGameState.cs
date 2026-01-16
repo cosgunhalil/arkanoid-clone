@@ -18,10 +18,8 @@ namespace ArkanoidProject.State
         [Inject] private PaddlePlacer _paddlePlacer;
         [Inject] private BallManager _ballManager;
         [Inject] private BrickManager _brickManager;
-        [Inject] private ArkanoidPhysicsWorld _physicsWorld;
 
         private Ball _currentBall;
-        private bool _ballLaunched;
 
         protected override async void OnEnter()
         {
@@ -31,7 +29,6 @@ namespace ArkanoidProject.State
             _ballManager.OnAllBallsLost += HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
-            _inputSystem.OnSpaceButtonDown += HandleSpacePressed;
             
             await _levelCreator.LoadAndCreateLevelAsync("Level1");
         }
@@ -67,17 +64,7 @@ namespace ArkanoidProject.State
             Paddle paddle = _paddlePlacer.GetCurrentPaddle();
             if (paddle != null)
             {
-                _currentBall = _ballManager.SpawnBallAbovePaddle(paddle.transform);
-                _ballLaunched = false;
-            }
-        }
-
-        private void HandleSpacePressed()
-        {
-            if (_currentBall != null && !_ballLaunched)
-            {
-                _ballManager.LaunchBallUpward(_currentBall);
-                _ballLaunched = true;
+                _currentBall = _ballManager.SpawnBallAbovePaddle(paddle);
             }
         }
 
@@ -118,7 +105,6 @@ namespace ArkanoidProject.State
             _ballManager.OnAllBallsLost -= HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged -= HandleScoreChanged;
-            _inputSystem.OnSpaceButtonDown -= HandleSpacePressed;
             
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
@@ -127,19 +113,6 @@ namespace ArkanoidProject.State
 
         protected override void OnUpdate()
         {
-            if (_currentBall != null && !_ballLaunched)
-            {
-                Paddle paddle = _paddlePlacer.GetCurrentPaddle();
-                if (paddle != null)
-                {
-                    Vector2 paddlePos = paddle.transform.position;
-                    _currentBall.Position = paddlePos + Vector2.up * 0.5f;
-                }
-            }
-            else
-            {
-                _physicsWorld.Tick();
-            }
         }
     }
 }
