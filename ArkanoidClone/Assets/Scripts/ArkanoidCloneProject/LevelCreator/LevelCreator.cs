@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ArkanoidCloneProject.Physics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -13,7 +14,7 @@ namespace ArkanoidCloneProject.LevelEditor
         [SerializeField] private Transform _levelContainer;
 
         private LevelData _currentLevelData;
-        private List<GameObject> _spawnedTiles = new List<GameObject>();
+        private List<GameObject> _spawnedBricks = new List<GameObject>();
         private AsyncOperationHandle<TextAsset> _levelAssetHandle;
         private LevelBounds _levelBounds;
 
@@ -70,12 +71,15 @@ namespace ArkanoidCloneProject.LevelEditor
                             GameObject tileObject = Instantiate(prefab, container);
                             tileObject.transform.localPosition = position;
                             tileObject.transform.localScale = new Vector2(_currentLevelData.tileSize.x, _currentLevelData.tileSize.y);
+                            tileObject.AddComponent<BoxCollider2D>();
+                            tileObject.AddComponent<Brick>();
+                            tileObject.tag = "Brick";
 
                             if (tile.hasPowerUp)
                             {
                             }
 
-                            _spawnedTiles.Add(tileObject);
+                            _spawnedBricks.Add(tileObject);
                         }
                     }
                 }
@@ -122,14 +126,14 @@ namespace ArkanoidCloneProject.LevelEditor
 
         public void ClearLevel()
         {
-            for (int i = _spawnedTiles.Count - 1; i >= 0; i--)
+            for (int i = _spawnedBricks.Count - 1; i >= 0; i--)
             {
-                if (_spawnedTiles[i] != null)
+                if (_spawnedBricks[i] != null)
                 {
-                    Destroy(_spawnedTiles[i]);
+                    Destroy(_spawnedBricks[i]);
                 }
             }
-            _spawnedTiles.Clear();
+            _spawnedBricks.Clear();
         }
 
         public LevelData GetCurrentLevelData()
@@ -137,9 +141,9 @@ namespace ArkanoidCloneProject.LevelEditor
             return _currentLevelData;
         }
 
-        public List<GameObject> GetSpawnedTiles()
+        public List<GameObject> GetSpawnedBricks()
         {
-            return _spawnedTiles;
+            return _spawnedBricks;
         }
 
         private void OnDestroy()

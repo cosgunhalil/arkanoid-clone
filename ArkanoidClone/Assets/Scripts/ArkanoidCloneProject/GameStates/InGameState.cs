@@ -54,7 +54,7 @@ namespace ArkanoidProject.State
             _borderManager.CreateBorders();
             _paddlePlacer.Place();
             
-            _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedTiles());
+            _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedBricks());
             
             SpawnBall();
         }

@@ -27,9 +27,10 @@ namespace ArkanoidCloneProject.Physics
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.GetComponent<Ball>() == null) return;
-            
-            TakeDamage(1);
+            if (collision.gameObject.CompareTag("Ball"))
+            {
+                TakeDamage(1);
+            }
         }
 
         public void TakeDamage(int damage)
