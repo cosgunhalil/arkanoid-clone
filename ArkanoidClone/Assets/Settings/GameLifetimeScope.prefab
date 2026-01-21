@@ -54,3 +54,4 @@ MonoBehaviour:
   paddlePrefab: {fileID: 9104000081622545113, guid: 3faf1eeef6374204f9638f03408b9029, type: 3}
   ballPrefab: {fileID: 2388668340438228029, guid: 681fa87c73267f2498b56456737b4bd5, type: 3}
   ballSettings: {fileID: 11400000, guid: a036dd93c2593ab428f834f7b27d4240, type: 2}
+  levelCollection: {fileID: 11400000, guid: 6654e13468d92154182b125648db0941, type: 2}

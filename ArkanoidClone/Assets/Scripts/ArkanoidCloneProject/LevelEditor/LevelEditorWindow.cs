@@ -8,17 +8,22 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
     {
         private LevelData _levelData;
         private LevelEditorConfig _config;
+        private LevelCollection _levelCollection;
 
         private int _selectedPaletteIndex = 0;
         private bool _isPowerUpMode = false;
         private bool _isPainting = false;
         private Vector2 _scrollPosition;
         private Vector2 _paletteScrollPosition;
+        private Vector2 _levelListScrollPosition;
 
         private int _newRows = 10;
         private int _newColumns = 8;
         private string _levelName = "New_Level";
         private string _savePath = "Assets/Levels";
+        private string _addressablePrefix = "";
+        private int _selectedLevelIndex = -1;
+        private bool _showLevelList = false;
 
         private const float CELL_SIZE = 30f;
 
@@ -43,6 +48,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
         private void OnGUI()
         {
             DrawToolbar();
+            DrawLevelCollectionSection();
             DrawPalette();
             DrawGrid();
         }
@@ -54,6 +60,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             EditorGUILayout.LabelField("Level Settings", EditorStyles.boldLabel);
 
             _config = (LevelEditorConfig)EditorGUILayout.ObjectField("Config", _config, typeof(LevelEditorConfig), false);
+            _levelCollection = (LevelCollection)EditorGUILayout.ObjectField("Level Collection", _levelCollection, typeof(LevelCollection), false);
 
             EditorGUILayout.Space(5);
 
@@ -62,6 +69,8 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             {
                 _levelData.levelName = _levelName;
             }
+
+            _addressablePrefix = EditorGUILayout.TextField("Addressable Prefix", _addressablePrefix);
 
             EditorGUILayout.Space(5);
 
@@ -112,6 +121,77 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
                 ClearAll();
             }
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawLevelCollectionSection()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Level Collection Management", EditorStyles.boldLabel);
+            if (GUILayout.Button(_showLevelList ? "Hide" : "Show", GUILayout.Width(50)))
+            {
+                _showLevelList = !_showLevelList;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            if (_levelCollection == null)
+            {
+                EditorGUILayout.HelpBox("Assign a LevelCollection to manage levels.", MessageType.Info);
+                if (GUILayout.Button("Create New Level Collection"))
+                {
+                    CreateNewLevelCollection();
+                }
+            }
+            else if (_showLevelList)
+            {
+                EditorGUILayout.LabelField($"Total Levels: {_levelCollection.LevelCount}");
+                
+                _levelListScrollPosition = EditorGUILayout.BeginScrollView(_levelListScrollPosition, GUILayout.Height(150));
+                
+                var levelAddresses = _levelCollection.GetAllLevelAddresses();
+                for (int i = 0; i < levelAddresses.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    
+                    GUI.backgroundColor = _selectedLevelIndex == i ? Color.cyan : Color.white;
+                    if (GUILayout.Button($"{i}: {levelAddresses[i]}", GUILayout.ExpandWidth(true)))
+                    {
+                        _selectedLevelIndex = i;
+                    }
+                    GUI.backgroundColor = Color.white;
+                    
+                    if (GUILayout.Button("↑", GUILayout.Width(25)))
+                    {
+                        MoveLevelUp(i);
+                    }
+                    if (GUILayout.Button("↓", GUILayout.Width(25)))
+                    {
+                        MoveLevelDown(i);
+                    }
+                    if (GUILayout.Button("X", GUILayout.Width(25)))
+                    {
+                        RemoveLevelFromCollection(i);
+                    }
+                    
+                    EditorGUILayout.EndHorizontal();
+                }
+                
+                EditorGUILayout.EndScrollView();
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Add Current Level"))
+                {
+                    AddCurrentLevelToCollection();
+                }
+                if (GUILayout.Button("Remove Selected"))
+                {
+                    RemoveSelectedLevelFromCollection();
+                }
+                EditorGUILayout.EndHorizontal();
+            }
 
             EditorGUILayout.EndVertical();
         }
@@ -303,6 +383,102 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             Debug.Log($"LevelEditorConfig created at: {path}");
         }
 
+        private void CreateNewLevelCollection()
+        {
+            string path = EditorUtility.SaveFilePanelInProject("Create Level Collection", "LevelCollection", "asset", "Choose location for the level collection file");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var collection = ScriptableObject.CreateInstance<LevelCollection>();
+            AssetDatabase.CreateAsset(collection, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            _levelCollection = collection;
+            EditorGUIUtility.PingObject(collection);
+
+            Debug.Log($"LevelCollection created at: {path}");
+        }
+
+        private void AddCurrentLevelToCollection()
+        {
+            if (_levelCollection == null)
+            {
+                Debug.LogWarning("No LevelCollection assigned!");
+                return;
+            }
+
+            string addressableName = GetAddressableName();
+            _levelCollection.AddLevel(addressableName);
+            EditorUtility.SetDirty(_levelCollection);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log($"Added level '{addressableName}' to collection");
+        }
+
+        private void RemoveSelectedLevelFromCollection()
+        {
+            if (_levelCollection == null || _selectedLevelIndex < 0)
+            {
+                return;
+            }
+
+            _levelCollection.RemoveLevelAt(_selectedLevelIndex);
+            EditorUtility.SetDirty(_levelCollection);
+            AssetDatabase.SaveAssets();
+
+            _selectedLevelIndex = -1;
+        }
+
+        private void RemoveLevelFromCollection(int index)
+        {
+            if (_levelCollection == null)
+            {
+                return;
+            }
+
+            _levelCollection.RemoveLevelAt(index);
+            EditorUtility.SetDirty(_levelCollection);
+            AssetDatabase.SaveAssets();
+
+            if (_selectedLevelIndex == index)
+            {
+                _selectedLevelIndex = -1;
+            }
+        }
+
+        private void MoveLevelUp(int index)
+        {
+            if (_levelCollection == null || index <= 0)
+            {
+                return;
+            }
+
+            _levelCollection.SwapLevels(index, index - 1);
+            EditorUtility.SetDirty(_levelCollection);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void MoveLevelDown(int index)
+        {
+            if (_levelCollection == null || index >= _levelCollection.LevelCount - 1)
+            {
+                return;
+            }
+
+            _levelCollection.SwapLevels(index, index + 1);
+            EditorUtility.SetDirty(_levelCollection);
+            AssetDatabase.SaveAssets();
+        }
+
+        private string GetAddressableName()
+        {
+            if (string.IsNullOrEmpty(_addressablePrefix))
+            {
+                return _levelName;
+            }
+            return $"{_addressablePrefix}{_levelName}";
+        }
+
         private void ResizeGrid()
         {
             _newRows = Mathf.Max(1, _newRows);
@@ -339,6 +515,21 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             string json = JsonUtility.ToJson(_levelData, true);
             File.WriteAllText(path, json);
             AssetDatabase.Refresh();
+
+            if (_levelCollection != null)
+            {
+                string addressableName = GetAddressableName();
+                if (!_levelCollection.GetAllLevelAddresses().Contains(addressableName))
+                {
+                    if (EditorUtility.DisplayDialog("Add to Collection", 
+                        $"Do you want to add '{addressableName}' to the level collection?", "Yes", "No"))
+                    {
+                        _levelCollection.AddLevel(addressableName);
+                        EditorUtility.SetDirty(_levelCollection);
+                        AssetDatabase.SaveAssets();
+                    }
+                }
+            }
 
             Debug.Log($"Level saved to: {path}");
         }

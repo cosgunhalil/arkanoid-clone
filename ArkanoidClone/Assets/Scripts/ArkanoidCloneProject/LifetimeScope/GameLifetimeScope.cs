@@ -19,6 +19,7 @@ namespace ArkanoidCloneProject.LifetimeScope
         [SerializeField] private GameObject paddlePrefab;
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private BallSettings ballSettings;
+        [SerializeField] private LevelCollection levelCollection;
         
         protected override void Configure(IContainerBuilder builder)
         {
@@ -39,6 +40,11 @@ namespace ArkanoidCloneProject.LifetimeScope
             
             builder.Register<BrickManager>(Lifetime.Singleton);
             BallInstaller.Install(builder, ballSettings, ballPrefab);
+            
+            if (levelCollection != null)
+            {
+                builder.RegisterInstance(levelCollection);
+            }
             
             Debug.Log("GameLifetimeScope Configure");
         }

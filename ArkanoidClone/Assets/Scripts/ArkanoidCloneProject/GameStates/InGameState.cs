@@ -20,17 +20,24 @@ namespace ArkanoidProject.State
         [Inject] private BrickManager _brickManager;
 
         private Ball _currentBall;
+        private bool _isTransitioningLevel;
 
         protected override async void OnEnter()
         {
             Debug.Log("InGameState.OnEnter");
 
+            _isTransitioningLevel = false;
+            
             _levelCreator.OnLevelCreated += HandleLevelCreated;
+            _levelCreator.OnAllLevelsCompleted += HandleAllLevelsCompleted;
+            _levelCreator.OnLevelStarted += HandleLevelStarted;
             _ballManager.OnAllBallsLost += HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
             
-            await _levelCreator.LoadAndCreateLevelAsync("Level2");
+            _levelCreator.SetBrickManager(_brickManager);
+            
+            await _levelCreator.LoadFirstLevelAsync();
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -52,11 +59,27 @@ namespace ArkanoidProject.State
             Debug.Log($"Playable Area Center: {_cameraManager.PlayableAreaCenter}");
             
             _borderManager.CreateBorders();
-            _paddlePlacer.Place();
             
+            if (_paddlePlacer.GetCurrentPaddle() == null)
+            {
+                _paddlePlacer.Place();
+            }
+            
+            _brickManager.UnregisterAllBricks();
             _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedBricks());
             
             SpawnBall();
+            
+            _isTransitioningLevel = false;
+        }
+
+        private void HandleLevelStarted(int levelIndex)
+        {
+            Debug.Log($"Starting Level {levelIndex + 1}");
+            
+            _ballManager.RemoveAllBalls();
+            
+            _isTransitioningLevel = true;
         }
 
         private void SpawnBall()
@@ -70,13 +93,24 @@ namespace ArkanoidProject.State
 
         private void HandleAllBallsLost()
         {
+            if (_isTransitioningLevel)
+            {
+                return;
+            }
+            
             Debug.Log("All balls lost!");
             SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
         }
 
         private void HandleAllBricksDestroyed()
         {
-            Debug.Log("Level Complete!");
+            Debug.Log($"Level {_levelCreator.CurrentLevelIndex + 1} Complete!");
+        }
+
+        private void HandleAllLevelsCompleted()
+        {
+            Debug.Log("All levels completed! You win!");
+            SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
         }
 
         private void HandleScoreChanged(int newScore)
@@ -102,6 +136,8 @@ namespace ArkanoidProject.State
             Debug.Log("InGameState.OnExit");
 
             _levelCreator.OnLevelCreated -= HandleLevelCreated;
+            _levelCreator.OnAllLevelsCompleted -= HandleAllLevelsCompleted;
+            _levelCreator.OnLevelStarted -= HandleLevelStarted;
             _ballManager.OnAllBallsLost -= HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged -= HandleScoreChanged;
@@ -109,6 +145,7 @@ namespace ArkanoidProject.State
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
             _paddlePlacer.RemovePaddle();
+            _levelCreator.ClearLevel();
         }
     }
 }

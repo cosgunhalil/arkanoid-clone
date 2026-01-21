@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArkanoidCloneProject.LevelEditor.LevelCreator
   _config: {fileID: 11400000, guid: ecb4af91e2887a944afc7645bcb8e3a6, type: 2}
+  _levelCollection: {fileID: 11400000, guid: 6654e13468d92154182b125648db0941, type: 2}
   _levelContainer: {fileID: 1959598080002265560}
-  _uniformScale: 1

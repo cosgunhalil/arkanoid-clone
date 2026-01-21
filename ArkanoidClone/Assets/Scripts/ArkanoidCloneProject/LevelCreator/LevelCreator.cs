@@ -5,31 +5,136 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using VContainer;
 
 namespace ArkanoidCloneProject.LevelEditor
 {
     public class LevelCreator : MonoBehaviour
     {
         [SerializeField] private LevelEditorConfig _config;
+        [SerializeField] private LevelCollection _levelCollection;
         [SerializeField] private Transform _levelContainer;
 
         private LevelData _currentLevelData;
         private List<Brick> _spawnedBricks = new List<Brick>();
         private AsyncOperationHandle<TextAsset> _levelAssetHandle;
         private LevelBounds _levelBounds;
+        private string _currentLevelAddress;
+        private int _currentLevelIndex;
+        private BrickManager _brickManager;
 
         public event Action<LevelBounds> OnLevelCreated;
+        public event Action OnAllLevelsCompleted;
+        public event Action<int> OnLevelStarted;
 
         public LevelBounds LevelBounds => _levelBounds;
+        public int CurrentLevelIndex => _currentLevelIndex;
+        public int TotalLevelCount => _levelCollection != null ? _levelCollection.LevelCount : 0;
+
+        [Inject]
+        public void Construct(BrickManager brickManager)
+        {
+            _brickManager = brickManager;
+        }
+
+        private void OnEnable()
+        {
+            if (_brickManager != null)
+            {
+                _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_brickManager != null)
+            {
+                _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
+            }
+        }
+
+        public void SetBrickManager(BrickManager brickManager)
+        {
+            if (_brickManager != null)
+            {
+                _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
+            }
+            
+            _brickManager = brickManager;
+            
+            if (_brickManager != null)
+            {
+                _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
+            }
+        }
+
+        private void HandleAllBricksDestroyed()
+        {
+            LoadNextLevelAsync().Forget();
+        }
+
+        public async UniTask LoadFirstLevelAsync()
+        {
+            if (_levelCollection == null || _levelCollection.LevelCount == 0)
+            {
+                Debug.LogError("LevelCollection is null or empty!");
+                return;
+            }
+
+            _currentLevelIndex = 0;
+            string levelAddress = _levelCollection.GetLevelAddress(_currentLevelIndex);
+            await LoadAndCreateLevelAsync(levelAddress);
+        }
+
+        public async UniTask LoadLevelAtIndexAsync(int index)
+        {
+            if (_levelCollection == null || index < 0 || index >= _levelCollection.LevelCount)
+            {
+                Debug.LogError($"Invalid level index: {index}");
+                return;
+            }
+
+            _currentLevelIndex = index;
+            string levelAddress = _levelCollection.GetLevelAddress(_currentLevelIndex);
+            await LoadAndCreateLevelAsync(levelAddress);
+        }
+
+        public async UniTask LoadNextLevelAsync()
+        {
+            if (_levelCollection == null)
+            {
+                Debug.LogError("LevelCollection is null!");
+                return;
+            }
+
+            if (!_levelCollection.HasNextLevel(_currentLevelIndex))
+            {
+                Debug.Log("All levels completed!");
+                OnAllLevelsCompleted?.Invoke();
+                return;
+            }
+
+            _currentLevelIndex++;
+            string levelAddress = _levelCollection.GetLevelAddress(_currentLevelIndex);
+            await LoadAndCreateLevelAsync(levelAddress);
+        }
 
         public async UniTask LoadAndCreateLevelAsync(string levelAddress)
         {
+            _currentLevelAddress = levelAddress;
+            OnLevelStarted?.Invoke(_currentLevelIndex);
+            
             await LoadLevelDataAsync(levelAddress);
             CreateLevel();
         }
 
         public async UniTask LoadLevelDataAsync(string levelAddress)
         {
+            if (_levelAssetHandle.IsValid())
+            {
+                Addressables.Release(_levelAssetHandle);
+            }
+            
             _levelAssetHandle = Addressables.LoadAssetAsync<TextAsset>(levelAddress);
             TextAsset levelAsset = await _levelAssetHandle.ToUniTask();
             
@@ -131,7 +236,7 @@ namespace ArkanoidCloneProject.LevelEditor
             {
                 if (_spawnedBricks[i] != null)
                 {
-                    Destroy(_spawnedBricks[i]);
+                    Destroy(_spawnedBricks[i].gameObject);
                 }
             }
             _spawnedBricks.Clear();
@@ -147,8 +252,23 @@ namespace ArkanoidCloneProject.LevelEditor
             return _spawnedBricks;
         }
 
+        public bool HasNextLevel()
+        {
+            return _levelCollection != null && _levelCollection.HasNextLevel(_currentLevelIndex);
+        }
+
+        public string GetCurrentLevelAddress()
+        {
+            return _currentLevelAddress;
+        }
+
         private void OnDestroy()
         {
+            if (_brickManager != null)
+            {
+                _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
+            }
+            
             if (_levelAssetHandle.IsValid())
             {
                 Addressables.Release(_levelAssetHandle);
