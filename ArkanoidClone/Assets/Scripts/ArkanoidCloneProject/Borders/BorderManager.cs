@@ -41,10 +41,9 @@ namespace ArkanoidCloneProject.LevelEditor
             CreateWallContainer();
             
             CameraBounds cameraBounds = GetCameraBounds();
-            LevelBounds levelBounds = _cameraManager.BoundsWithMargins;
             
-            _topWall = CreateWall("Wall", GetTopWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
-            _bottomWall = CreateWall("Wall", GetBottomWallPosition(levelBounds, cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _topWall = CreateWall("Wall", GetTopWallPosition(cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _bottomWall = CreateWall("Wall", GetBottomWallPosition(cameraBounds), GetHorizontalWallSize(cameraBounds));
             _leftWall = CreateWall("Wall", GetLeftWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
             _rightWall = CreateWall("Wall", GetRightWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
         }
@@ -109,17 +108,17 @@ namespace ArkanoidCloneProject.LevelEditor
             return wall;
         }
 
-        private Vector3 GetTopWallPosition(LevelBounds levelBounds, CameraBounds cameraBounds)
+        private Vector3 GetTopWallPosition(CameraBounds cameraBounds)
         {
             float x = cameraBounds.CenterX;
-            float y = levelBounds.TopLeft.y + _wallThickness / 2f;
+            float y = cameraBounds.Top + _wallThickness / 2f;
             return new Vector3(x, y, 0f);
         }
 
-        private Vector3 GetBottomWallPosition(LevelBounds levelBounds, CameraBounds cameraBounds)
+        private Vector3 GetBottomWallPosition(CameraBounds cameraBounds)
         {
             float x = cameraBounds.CenterX;
-            float y = levelBounds.BottomLeft.y - _wallThickness / 2f;
+            float y = cameraBounds.Bottom - _wallThickness / 2f;
             return new Vector3(x, y, 0f);
         }
 

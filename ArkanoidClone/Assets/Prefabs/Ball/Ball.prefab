@@ -142,8 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1caabba56e674d447b607d5000c70ce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArkanoidCloneProject.Physics.Ball
-  _speed: 8
-  _maxPaddleBounceAngle: 75
+  _speed: 15
+  _maxPaddleBounceAngle: 60
   _skinWidth: 0.01
   _paddleOffsetY: 0.5
 --- !u!50 &-8034381592297215489

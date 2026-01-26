@@ -64,6 +64,10 @@ namespace ArkanoidProject.State
             {
                 _paddlePlacer.Place();
             }
+            else
+            {
+                _paddlePlacer.Reposition();
+            }
             
             _brickManager.UnregisterAllBricks();
             _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedBricks());

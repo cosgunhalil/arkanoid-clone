@@ -25,6 +25,12 @@ namespace ArkanoidCloneProject.Paddle
             _inputManager.OnRightButtonUp += HandleRightButtonUp;
         }
 
+        public void SetBounds(float minX, float maxX)
+        {
+            _minX = minX;
+            _maxX = maxX;
+        }
+
         private void HandleLeftButtonDown()
         {
             _isMovingLeft = true;

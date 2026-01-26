@@ -49,6 +49,41 @@ namespace ArkanoidCloneProject.Paddle
             return _currentPaddle;
         }
 
+        public void RecalculateBounds()
+        {
+            if (_currentPaddle == null) return;
+            
+            float paddleHalfWidth = _currentPaddle.transform.localScale.x / 2f;
+            
+            float cameraHeight = _camera.orthographicSize * 2f;
+            float cameraWidth = cameraHeight * _camera.aspect;
+            float screenLeftEdge = _camera.transform.position.x - cameraWidth / 2f;
+            float screenRightEdge = _camera.transform.position.x + cameraWidth / 2f;
+            
+            float minX = screenLeftEdge + paddleHalfWidth;
+            float maxX = screenRightEdge - paddleHalfWidth;
+            
+            _currentPaddle.SetBounds(minX, maxX);
+        }
+
+        public void Reposition()
+        {
+            if (_currentPaddle == null) return;
+            
+            float cameraHeight = _camera.orthographicSize * 2f;
+            float cameraWidth = cameraHeight * _camera.aspect;
+            
+            float cameraBottom = _camera.transform.position.y - cameraHeight / 2f;
+            float cameraCenterX = _camera.transform.position.x;
+            
+            float paddleY = cameraBottom + 0.5f;
+            float centerX = cameraCenterX;
+            
+            _currentPaddle.transform.position = new Vector3(centerX, paddleY, 0f);
+            
+            RecalculateBounds();
+        }
+
         public Paddle GetCurrentPaddle()
         {
             return _currentPaddle;
