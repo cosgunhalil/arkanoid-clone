@@ -12,10 +12,10 @@ namespace ArkanoidCloneProject.Physics
         private readonly IBallFactory _ballFactory;
         private readonly BallSettings _settings;
         private readonly CameraManager _cameraManager;
-        private readonly List<Ball> _activeBalls;
+        private readonly List<Ball.Ball> _activeBalls;
 
         public event Action OnAllBallsLost;
-        public event Action<Ball> OnBallSpawned;
+        public event Action<Ball.Ball> OnBallSpawned;
         
         public int ActiveBallCount => _activeBalls.Count;
 
@@ -28,12 +28,12 @@ namespace ArkanoidCloneProject.Physics
             _ballFactory = ballFactory;
             _settings = settings;
             _cameraManager = cameraManager;
-            _activeBalls = new List<Ball>();
+            _activeBalls = new List<Ball.Ball>();
         }
 
-        public Ball SpawnBall(Vector2 position, Paddle.Paddle paddle)
+        public Ball.Ball SpawnBall(Vector2 position, Paddle.Paddle paddle)
         {
-            Ball ball = _ballFactory.Create(position);
+            Ball.Ball ball = _ballFactory.Create(position);
             ball.SetPaddle(paddle);
             ball.SetSpeed(_settings.BallSpeed);
             ball.OnBallDeath += () => HandleBallDeath(ball);
@@ -42,23 +42,23 @@ namespace ArkanoidCloneProject.Physics
             return ball;
         }
 
-        public Ball SpawnBallAbovePaddle(Paddle.Paddle paddle, float offsetY = 0.5f)
+        public Ball.Ball SpawnBallAbovePaddle(Paddle.Paddle paddle, float offsetY = 0.5f)
         {
             Vector2 spawnPosition = (Vector2)paddle.transform.position + Vector2.up * offsetY;
             return SpawnBall(spawnPosition, paddle);
         }
 
-        public void LaunchBall(Ball ball)
+        public void LaunchBall(Ball.Ball ball)
         {
             ball.Launch();
         }
 
-        public void LaunchBall(Ball ball, Vector2 direction)
+        public void LaunchBall(Ball.Ball ball, Vector2 direction)
         {
             ball.Launch(direction);
         }
 
-        private void HandleBallDeath(Ball ball)
+        private void HandleBallDeath(Ball.Ball ball)
         {
             _activeBalls.Remove(ball);
             UnityEngine.Object.Destroy(ball.gameObject);
@@ -74,7 +74,7 @@ namespace ArkanoidCloneProject.Physics
             int count = _activeBalls.Count;
             for (int i = count - 1; i >= 0; i--)
             {
-                Ball ball = _activeBalls[i];
+                Ball.Ball ball = _activeBalls[i];
                 if (ball != null && ball.gameObject != null)
                 {
                     UnityEngine.Object.Destroy(ball.gameObject);
@@ -92,9 +92,9 @@ namespace ArkanoidCloneProject.Physics
             }
         }
 
-        public List<Ball> GetActiveBalls()
+        public List<Ball.Ball> GetActiveBalls()
         {
-            return new List<Ball>(_activeBalls);
+            return new List<Ball.Ball>(_activeBalls);
         }
     }
 }

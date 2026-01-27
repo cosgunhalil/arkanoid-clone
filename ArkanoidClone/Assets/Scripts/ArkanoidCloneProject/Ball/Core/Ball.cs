@@ -1,17 +1,10 @@
 using System;
 using ArkanoidCloneProject.InputSystem;
-using ArkanoidCloneProject.Paddle;
 using UnityEngine;
 using VContainer;
 
-namespace ArkanoidCloneProject.Physics
+namespace ArkanoidCloneProject.Ball
 {
-    public enum BallState
-    {
-        Hold,
-        Free
-    }
-
     [RequireComponent(typeof(CircleCollider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
     public class Ball : MonoBehaviour
@@ -79,9 +72,9 @@ namespace ArkanoidCloneProject.Physics
         {
             _state = BallState.Free;
             
-            float randomAngle = UnityEngine.Random.Range(-30f, 30f);
-            float angleRadians = randomAngle * Mathf.Deg2Rad;
-            Vector2 direction = new Vector2(Mathf.Sin(angleRadians), Mathf.Cos(angleRadians));
+            var randomAngle = UnityEngine.Random.Range(-30f, 30f);
+            var angleRadians = randomAngle * Mathf.Deg2Rad;
+            var direction = new Vector2(Mathf.Sin(angleRadians), Mathf.Cos(angleRadians));
             
             _velocity = direction.normalized * _speed;
         }
@@ -130,8 +123,8 @@ namespace ArkanoidCloneProject.Physics
 
         private void UpdateFreeState()
         {
-            Vector2 movement = _velocity * Time.fixedDeltaTime;
-            Vector2 newPosition = _rigidbody.position + movement;
+            var movement = _velocity * Time.fixedDeltaTime;
+            var newPosition = _rigidbody.position + movement;
             _rigidbody.MovePosition(newPosition);
         }
 
@@ -179,18 +172,18 @@ namespace ArkanoidCloneProject.Physics
         {
             if (collision.contactCount == 0) return;
             
-            Collider2D paddleCollider = collision.collider;
-            float paddleCenterX = paddleCollider.bounds.center.x;
-            float paddleHalfWidth = paddleCollider.bounds.extents.x;
+            var paddleCollider = collision.collider;
+            var paddleCenterX = paddleCollider.bounds.center.x;
+            var paddleHalfWidth = paddleCollider.bounds.extents.x;
             
-            Vector2 contactPoint = collision.contacts[0].point;
-            float hitOffset = contactPoint.x - paddleCenterX;
-            float normalizedOffset = Mathf.Clamp(hitOffset / paddleHalfWidth, -1f, 1f);
+            var contactPoint = collision.contacts[0].point;
+            var hitOffset = contactPoint.x - paddleCenterX;
+            var normalizedOffset = Mathf.Clamp(hitOffset / paddleHalfWidth, -1f, 1f);
             
-            float bounceAngle = normalizedOffset * _maxPaddleBounceAngle;
-            float angleRadians = bounceAngle * Mathf.Deg2Rad;
+            var bounceAngle = normalizedOffset * _maxPaddleBounceAngle;
+            var angleRadians = bounceAngle * Mathf.Deg2Rad;
             
-            Vector2 newDirection = new Vector2(Mathf.Sin(angleRadians), Mathf.Cos(angleRadians));
+            var newDirection = new Vector2(Mathf.Sin(angleRadians), Mathf.Cos(angleRadians));
             _velocity = newDirection.normalized * _speed;
         }
 
@@ -198,8 +191,8 @@ namespace ArkanoidCloneProject.Physics
         {
             if (collision.contactCount == 0) return;
             
-            Vector2 normal = collision.contacts[0].normal;
-            Vector2 correctedPosition = _rigidbody.position + normal * _skinWidth;
+            var normal = collision.contacts[0].normal;
+            var correctedPosition = _rigidbody.position + normal * _skinWidth;
             transform.position = correctedPosition;
         }
     }

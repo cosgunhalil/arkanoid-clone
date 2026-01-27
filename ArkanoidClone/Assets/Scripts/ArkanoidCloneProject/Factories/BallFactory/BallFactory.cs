@@ -16,10 +16,10 @@ namespace ArkanoidCloneProject.Physics
             _ballPrefab = ballPrefabHolder.Prefab;
         }
 
-        public Ball Create(Vector2 position)
+        public Ball.Ball Create(Vector2 position)
         {
             GameObject ballObject = Object.Instantiate(_ballPrefab, position, Quaternion.identity);
-            Ball ball = ballObject.GetComponent<Ball>();
+            Ball.Ball ball = ballObject.GetComponent<Ball.Ball>();
             _resolver.Inject(ball);
             ball.Initialiaze();
             return ball;

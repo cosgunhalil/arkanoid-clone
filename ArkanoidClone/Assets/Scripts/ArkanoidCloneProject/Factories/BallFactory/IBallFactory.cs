@@ -4,6 +4,6 @@ namespace ArkanoidCloneProject.Physics
 {
     public interface IBallFactory
     {
-        Ball Create(Vector2 position);
+        Ball.Ball Create(Vector2 position);
     }
 }

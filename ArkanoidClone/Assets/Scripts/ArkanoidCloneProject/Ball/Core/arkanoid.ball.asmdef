@@ -4,7 +4,8 @@
     "references": [
         "GUID:7d39bd3597c05684594dd052aa468992",
         "GUID:c72951fcae59b784eb1578cf779a0a69",
-        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "arkanoid.ball.state"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
