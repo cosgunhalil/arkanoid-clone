@@ -1,0 +1,18 @@
+{
+    "name": "arkanoid.factory.ball",
+    "rootNamespace": "",
+    "references": [
+        "GUID:09a59094237304f439dcfdfadadb18d7",
+        "GUID:c999255cd3ea5b944aae0b02cde8f19d",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

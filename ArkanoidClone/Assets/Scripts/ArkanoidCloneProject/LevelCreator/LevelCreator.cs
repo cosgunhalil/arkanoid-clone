@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using ArkanoidCloneProject.Physics;
@@ -276,3 +277,4 @@ namespace ArkanoidCloneProject.LevelEditor
         }
     }
 }
+#endif

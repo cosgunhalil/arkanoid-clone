@@ -1,0 +1,17 @@
+{
+    "name": "arkanoid.factory.state",
+    "rootNamespace": "",
+    "references": [
+        "GUID:90cdbd5d1a0f5d84da9e350db19b56ca",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

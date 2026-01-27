@@ -1,0 +1,23 @@
+{
+    "name": "arkanoid.state.app",
+    "rootNamespace": "",
+    "references": [
+        "GUID:90cdbd5d1a0f5d84da9e350db19b56ca",
+        "GUID:3081e762e38862343999d37e6ec42f2b",
+        "GUID:f7a525c6088ec164aba75e7a28b1342e",
+        "GUID:f5d4573a744cedd488aa5f4194ce741c",
+        "GUID:3c531cfaa45345844bd445f0e851c5ae",
+        "GUID:9c07be2d71b95b841a69e5c8acec40e4",
+        "GUID:7c08ff3c6726c244b9d6953c695b8858",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

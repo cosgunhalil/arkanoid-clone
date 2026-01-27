@@ -1,0 +1,20 @@
+{
+    "name": "arkanoid.installer.ball",
+    "rootNamespace": "",
+    "references": [
+        "GUID:334a7d2c53bdd0f4cad1a115fa505019",
+        "GUID:09a59094237304f439dcfdfadadb18d7",
+        "GUID:31273ea96c98366469064e5fe7440a8b",
+        "GUID:96911ae0b2288d64abf907e948d1ec68",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

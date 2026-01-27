@@ -1,0 +1,4 @@
+{
+	"name": "arkanoid.state.menu",
+	"references":[ "GUID:90cdbd5d1a0f5d84da9e350db19b56ca", "GUID:7c08ff3c6726c244b9d6953c695b8858" ]
+}

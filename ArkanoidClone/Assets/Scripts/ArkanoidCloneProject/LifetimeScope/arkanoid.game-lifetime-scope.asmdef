@@ -1,0 +1,33 @@
+{
+    "name": "arkanoid.game-lifetime-scope",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:f0e10e494139ee5469452bac43d1add8",
+        "GUID:ee372cccbb9d42a4f9772c6e22b76556",
+        "GUID:cf2e6e7e2a93be944ba67e8a9145ce50",
+        "GUID:334a7d2c53bdd0f4cad1a115fa505019",
+        "GUID:ed01b0fcbb3ebbb46a3d357e4df3066d",
+        "GUID:3081e762e38862343999d37e6ec42f2b",
+        "GUID:c72951fcae59b784eb1578cf779a0a69",
+        "GUID:dd13e3e5ef8f1ce44b6d2ed1393e4f53",
+        "GUID:f7a525c6088ec164aba75e7a28b1342e",
+        "GUID:f5d4573a744cedd488aa5f4194ce741c",
+        "GUID:3c531cfaa45345844bd445f0e851c5ae",
+        "GUID:9c07be2d71b95b841a69e5c8acec40e4",
+        "GUID:869c85ab127dbc14caa3bb4507f3a71b",
+        "GUID:c5f93ea513a193749ad3309c1afc8fd9",
+        "GUID:a15d4106a1b60a5449fc3b972bf1967d",
+        "GUID:4e1a0d5581a5e7f45b7f38061907fa59",
+        "GUID:15bbb87668bc13f4dbf5685d5dccee0a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

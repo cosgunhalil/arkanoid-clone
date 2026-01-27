@@ -1,0 +1,21 @@
+{
+    "name": "arkanoid.ball-manager",
+    "rootNamespace": "",
+    "references": [
+        "GUID:31273ea96c98366469064e5fe7440a8b",
+        "GUID:334a7d2c53bdd0f4cad1a115fa505019",
+        "GUID:ee372cccbb9d42a4f9772c6e22b76556",
+        "GUID:c999255cd3ea5b944aae0b02cde8f19d",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:7d39bd3597c05684594dd052aa468992"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

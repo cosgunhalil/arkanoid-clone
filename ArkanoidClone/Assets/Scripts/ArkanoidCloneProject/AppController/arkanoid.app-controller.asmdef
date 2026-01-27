@@ -1,0 +1,19 @@
+{
+    "name": "arkanoid.app-controller",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3081e762e38862343999d37e6ec42f2b",
+        "GUID:dd13e3e5ef8f1ce44b6d2ed1393e4f53",
+        "GUID:90cdbd5d1a0f5d84da9e350db19b56ca",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

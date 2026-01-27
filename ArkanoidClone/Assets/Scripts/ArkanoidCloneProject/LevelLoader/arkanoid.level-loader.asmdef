@@ -1,0 +1,4 @@
+{
+	"name": "arkanoid.level-loader",
+	"references":[ "GUID:30487bfb661f9bc4689697f8be9119e9", "GUID:1d2419304b6fce341bcaae229beaab80", "GUID:3edd62849be914543841a70697075d0d" ]
+}

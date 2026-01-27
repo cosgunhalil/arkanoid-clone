@@ -1,0 +1,17 @@
+{
+    "name": "arkanoid.input-system",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d3830f363f6b6334da19a3d8744a7a21",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
