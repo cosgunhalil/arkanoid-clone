@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ArkanoidCloneProject.LevelEditor
@@ -12,38 +13,8 @@ namespace ArkanoidCloneProject.LevelEditor
 
         private LevelBounds _currentBounds;
         private LevelBounds _boundsWithMargins;
-
-        public float LeftMargin
-        {
-            get => _leftMargin;
-            set => _leftMargin = value;
-        }
-
-        public float RightMargin
-        {
-            get => _rightMargin;
-            set => _rightMargin = value;
-        }
-
-        public float TopMargin
-        {
-            get => _topMargin;
-            set => _topMargin = value;
-        }
-
-        public float BottomMargin
-        {
-            get => _bottomMargin;
-            set => _bottomMargin = value;
-        }
-
-        public LevelBounds CurrentBounds => _currentBounds;
+        
         public LevelBounds BoundsWithMargins => _boundsWithMargins;
-
-        public Vector2 PlayableAreaTopLeft => _boundsWithMargins.TopLeft;
-        public Vector2 PlayableAreaTopRight => _boundsWithMargins.TopRight;
-        public Vector2 PlayableAreaBottomLeft => _boundsWithMargins.BottomLeft;
-        public Vector2 PlayableAreaBottomRight => _boundsWithMargins.BottomRight;
         public Vector2 PlayableAreaCenter => _boundsWithMargins.Center;
 
         private void Awake()
@@ -142,6 +113,42 @@ namespace ArkanoidCloneProject.LevelEditor
             float clampedX = Mathf.Clamp(position.x, _boundsWithMargins.BottomLeft.x, _boundsWithMargins.BottomRight.x);
             float clampedY = Mathf.Clamp(position.y, _boundsWithMargins.BottomLeft.y, _boundsWithMargins.TopLeft.y);
             return new Vector2(clampedX, clampedY);
+        }
+
+        public Tuple<float, float> GetCameraMinMaxX(float margin)
+        {
+            var cameraHeight = _camera.orthographicSize * 2f;
+            var cameraWidth = cameraHeight * _camera.aspect;
+            var screenLeftEdge = _camera.transform.position.x - cameraWidth * .5f;
+            var screenRightEdge = _camera.transform.position.x + cameraWidth * .5f;
+            var minX = screenLeftEdge + margin;
+            var maxX = screenRightEdge - margin;
+            
+            return new Tuple<float, float>(minX, maxX);
+        }
+
+        public Vector2 GetCameraBottomCoordinate()
+        {
+            var cameraHeight = _camera.orthographicSize * 2f;
+            var cameraBottom = _camera.transform.position.y - cameraHeight * .5f;
+            var cameraCenterX = _camera.transform.position.x;
+            
+            return new Vector2(cameraCenterX, cameraBottom);
+        }
+        
+        public CameraBounds GetCameraBounds()
+        {
+            float cameraHeight = _camera.orthographicSize * 2f;
+            float cameraWidth = cameraHeight * _camera.aspect;
+            
+            Vector3 cameraPosition = _camera.transform.position;
+            
+            float left = cameraPosition.x - cameraWidth / 2f;
+            float right = cameraPosition.x + cameraWidth / 2f;
+            float top = cameraPosition.y + cameraHeight / 2f;
+            float bottom = cameraPosition.y - cameraHeight / 2f;
+            
+            return new CameraBounds(left, right, top, bottom, cameraPosition.x, cameraPosition.y);
         }
     }
 }

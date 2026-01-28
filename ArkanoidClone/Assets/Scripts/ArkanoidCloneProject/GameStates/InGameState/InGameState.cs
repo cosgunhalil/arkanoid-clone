@@ -53,12 +53,6 @@ namespace ArkanoidProject.State
 
             _cameraManager.SetMargins(leftMargin, rightMargin, topMargin, bottomMargin);
             _cameraManager.FocusOnLevel(levelBounds);
-
-            Debug.Log($"Level Bounds - TopLeft: {levelBounds.TopLeft}, TopRight: {levelBounds.TopRight}");
-            Debug.Log($"Level Bounds - BottomLeft: {levelBounds.BottomLeft}, BottomRight: {levelBounds.BottomRight}");
-            Debug.Log($"Level Bounds - Center: {levelBounds.Center}");
-            Debug.Log($"Playable Area Center: {_cameraManager.PlayableAreaCenter}");
-            
             _borderManager.CreateBorders();
             
             if (_paddlePlacer.GetCurrentPaddle() == null)

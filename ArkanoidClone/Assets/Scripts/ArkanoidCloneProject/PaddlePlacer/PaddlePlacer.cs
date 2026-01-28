@@ -2,6 +2,7 @@ using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using UnityEngine;
 using VContainer;
+using Object = UnityEngine.Object;
 
 namespace ArkanoidCloneProject.Paddle
 {
@@ -10,7 +11,6 @@ namespace ArkanoidCloneProject.Paddle
         private readonly IPaddleFactory _paddleFactory;
         private readonly CameraManager _cameraManager;
         private readonly IInputManager _inputManager;
-        private readonly Camera _camera;
         
         private Paddle _currentPaddle;
 
@@ -20,31 +20,15 @@ namespace ArkanoidCloneProject.Paddle
             _paddleFactory = paddleFactory;
             _cameraManager = cameraManager;
             _inputManager = inputManager;
-            _camera = Camera.main;
         }
 
         public Paddle Place()
         {
             _currentPaddle = _paddleFactory.Create();
-            
-            LevelBounds bounds = _cameraManager.BoundsWithMargins;
-            
-            float paddleY = bounds.BottomLeft.y + 0.5f;
-            float centerX = bounds.Center.x;
-            
-            _currentPaddle.transform.position = new Vector3(centerX, paddleY, 0f);
-            
-            float paddleHalfWidth = _currentPaddle.transform.localScale.x / 2f;
-            
-            float cameraHeight = _camera.orthographicSize * 2f;
-            float cameraWidth = cameraHeight * _camera.aspect;
-            float screenLeftEdge = _camera.transform.position.x - cameraWidth / 2f;
-            float screenRightEdge = _camera.transform.position.x + cameraWidth / 2f;
-            
-            float minX = screenLeftEdge + paddleHalfWidth;
-            float maxX = screenRightEdge - paddleHalfWidth;
-            
-            _currentPaddle.Initialize(_inputManager, minX, maxX);
+            Reposition();
+            var paddleHalfWidth = _currentPaddle.transform.localScale.x * .5f;
+            var cameraMinMaxX = _cameraManager.GetCameraMinMaxX(paddleHalfWidth);
+            _currentPaddle.Initialize(_inputManager, cameraMinMaxX.Item1, cameraMinMaxX.Item2);
             
             return _currentPaddle;
         }
@@ -52,34 +36,19 @@ namespace ArkanoidCloneProject.Paddle
         public void RecalculateBounds()
         {
             if (_currentPaddle == null) return;
-            
-            float paddleHalfWidth = _currentPaddle.transform.localScale.x / 2f;
-            
-            float cameraHeight = _camera.orthographicSize * 2f;
-            float cameraWidth = cameraHeight * _camera.aspect;
-            float screenLeftEdge = _camera.transform.position.x - cameraWidth / 2f;
-            float screenRightEdge = _camera.transform.position.x + cameraWidth / 2f;
-            
-            float minX = screenLeftEdge + paddleHalfWidth;
-            float maxX = screenRightEdge - paddleHalfWidth;
-            
-            _currentPaddle.SetBounds(minX, maxX);
+
+            var paddleHalfWidth = _currentPaddle.transform.localScale.x * .5f;
+            var cameraMinMaxX = _cameraManager.GetCameraMinMaxX(paddleHalfWidth);
+            _currentPaddle.SetBounds(cameraMinMaxX.Item1, cameraMinMaxX.Item2);
         }
 
         public void Reposition()
         {
             if (_currentPaddle == null) return;
             
-            float cameraHeight = _camera.orthographicSize * 2f;
-            float cameraWidth = cameraHeight * _camera.aspect;
-            
-            float cameraBottom = _camera.transform.position.y - cameraHeight / 2f;
-            float cameraCenterX = _camera.transform.position.x;
-            
-            float paddleY = cameraBottom + 0.5f;
-            float centerX = cameraCenterX;
-            
-            _currentPaddle.transform.position = new Vector3(centerX, paddleY, 0f);
+            var cameraBottomCoordinate = _cameraManager.GetCameraBottomCoordinate();
+            var paddleY = cameraBottomCoordinate.y + 0.5f;
+            _currentPaddle.transform.position = new Vector3(cameraBottomCoordinate.x, paddleY, 0f);
             
             RecalculateBounds();
         }

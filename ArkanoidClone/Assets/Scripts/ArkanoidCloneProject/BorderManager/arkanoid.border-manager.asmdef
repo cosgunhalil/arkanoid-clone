@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "GUID:ee372cccbb9d42a4f9772c6e22b76556",
-        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "arkanoid.camera.bounds"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
