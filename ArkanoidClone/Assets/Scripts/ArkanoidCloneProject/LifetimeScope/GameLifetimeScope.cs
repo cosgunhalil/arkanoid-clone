@@ -1,5 +1,6 @@
 using ArkanoidCloneProject.Controllers.Scripts;
 using ArkanoidCloneProject.Factories.StateFactory;
+using ArkanoidCloneProject.GameStates.PrepareGameState;
 using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
@@ -28,6 +29,7 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.Register<AppState>(Lifetime.Transient);
             builder.Register<MainMenuState>(Lifetime.Transient);
             builder.Register<InGameState>(Lifetime.Transient);
+            builder.Register<PrepareGameState>(Lifetime.Transient);
             builder.Register<PauseGameState>(Lifetime.Transient);
             builder.Register<EndGameState>(Lifetime.Transient);
             builder.RegisterComponentInNewPrefab<LevelCreator>(levelCreatorPrefab, Lifetime.Singleton);

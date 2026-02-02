@@ -33,11 +33,20 @@ namespace ArkanoidCloneProject.Physics
 
         public Ball.Ball SpawnBall(Vector2 position, Paddle.Paddle paddle)
         {
-            Ball.Ball ball = _ballFactory.Create(position);
+            Ball.Ball ball;
+            if (_activeBalls.Count == 0)
+            {
+                ball = _ballFactory.Create(position);
+                ball.OnBallDeath += () => HandleBallDeath(ball);
+                _activeBalls.Add(ball);
+            }
+            else
+            {
+                ball = _activeBalls[0];
+            }
+            
             ball.SetPaddle(paddle);
             ball.SetSpeed(_settings.BallSpeed);
-            ball.OnBallDeath += () => HandleBallDeath(ball);
-            _activeBalls.Add(ball);
             OnBallSpawned?.Invoke(ball);
             return ball;
         }

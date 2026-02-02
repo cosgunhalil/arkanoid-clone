@@ -7,6 +7,7 @@ namespace ArkanoidProject.State
         CONTINUE_GAME_REQUEST,
         PAUSE_GAME_REQUEST,
         START_GAME_REQUEST,
-        GAME_OVER_REQUEST
+        GAME_OVER_REQUEST,
+        PREPARE_COMPLETE
     }
 }

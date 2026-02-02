@@ -24,7 +24,11 @@ namespace ArkanoidCloneProject.Paddle
 
         public Paddle Place()
         {
-            _currentPaddle = _paddleFactory.Create();
+            if (_currentPaddle == null)
+            {
+                _currentPaddle = _paddleFactory.Create();
+            }
+            
             Reposition();
             var paddleHalfWidth = _currentPaddle.transform.localScale.x * .5f;
             var cameraMinMaxX = _cameraManager.GetCameraMinMaxX(paddleHalfWidth);

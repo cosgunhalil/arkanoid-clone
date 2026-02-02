@@ -1,0 +1,29 @@
+{
+    "name": "arkanoid.state.prepare-game-state",
+    "rootNamespace": "",
+    "references": [
+        "GUID:90cdbd5d1a0f5d84da9e350db19b56ca",
+        "GUID:f0e10e494139ee5469452bac43d1add8",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:589214d61287bb94ead2e00f7dab4ed0",
+        "GUID:cbe0133cd4ce63248908c8ccd7281b42",
+        "GUID:ee372cccbb9d42a4f9772c6e22b76556",
+        "GUID:cf2e6e7e2a93be944ba67e8a9145ce50",
+        "GUID:c5f93ea513a193749ad3309c1afc8fd9",
+        "GUID:7d39bd3597c05684594dd052aa468992",
+        "GUID:a15d4106a1b60a5449fc3b972bf1967d",
+        "GUID:96911ae0b2288d64abf907e948d1ec68",
+        "GUID:c999255cd3ea5b944aae0b02cde8f19d",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:7c08ff3c6726c244b9d6953c695b8858"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

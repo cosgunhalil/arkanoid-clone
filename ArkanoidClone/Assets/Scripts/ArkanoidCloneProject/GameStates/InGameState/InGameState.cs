@@ -35,10 +35,6 @@ namespace ArkanoidProject.State
             _ballManager.OnAllBallsLost += HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
-            
-            _levelCreator.SetBrickManager(_brickManager);
-            
-            await _levelCreator.LoadFirstLevelAsync();
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -55,14 +51,7 @@ namespace ArkanoidProject.State
             _cameraManager.FocusOnLevel(levelBounds);
             _borderManager.CreateBorders();
             
-            if (_paddlePlacer.GetCurrentPaddle() == null)
-            {
-                _paddlePlacer.Place();
-            }
-            else
-            {
-                _paddlePlacer.Reposition();
-            }
+            _paddlePlacer.Reposition();
             
             _brickManager.UnregisterAllBricks();
             _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedBricks());
