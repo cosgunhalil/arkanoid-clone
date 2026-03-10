@@ -12,5 +12,8 @@ namespace ArkanoidCloneProject.InputSystem
 
         event Action OnRightButtonDown;
         event Action OnRightButtonUp;
+        
+        event Action OnESCButtonUp;
+        event Action OnESCButtonDown;
     }
 }

@@ -94,10 +94,28 @@ namespace ArkanoidCloneProject.Physics
 
         public void StopAllBalls()
         {
-            int count = _activeBalls.Count;
+            var count = _activeBalls.Count;
             for (int i = 0; i < count; i++)
             {
                 _activeBalls[i].Stop();
+            }
+        }
+        
+        public void PauseAllBalls()
+        {
+            var count = _activeBalls.Count;
+            for (int i = 0; i < count; i++)
+            {
+                _activeBalls[i].Pause();
+            }
+        }
+        
+        public void ResumeAllBalls()
+        {
+            var count = _activeBalls.Count;
+            for (int i = 0; i < count; i++)
+            {
+                _activeBalls[i].Resume();
             }
         }
 

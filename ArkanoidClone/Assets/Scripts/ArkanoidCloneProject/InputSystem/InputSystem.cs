@@ -14,7 +14,9 @@ public sealed class InputManager : IInputManager, IDisposable
 
     public event Action OnRightButtonDown;
     public event Action OnRightButtonUp;
-
+    public event Action OnESCButtonUp;
+    public event Action OnESCButtonDown;
+    
     public InputManager()
     {
         actions = new GameControls();
@@ -30,8 +32,19 @@ public sealed class InputManager : IInputManager, IDisposable
         Bind(actions.Player.MoveRight,
             () => OnRightButtonDown?.Invoke(),
             () => OnRightButtonUp?.Invoke());
+        
+        Bind(actions.Player.Escape,
+            () => OnESCButtonDown?.Invoke(),
+            () => OnESCButtonUp?.Invoke());
+        
 
         actions.Enable();
+    }
+
+    public void Dispose()
+    {
+        actions.Disable();
+        actions.Dispose();
     }
 
     private static void Bind(
@@ -41,11 +54,5 @@ public sealed class InputManager : IInputManager, IDisposable
     {
         action.started += _ => onDown?.Invoke();
         action.canceled += _ => onUp?.Invoke();
-    }
-
-    public void Dispose()
-    {
-        actions.Disable();
-        actions.Dispose();
     }
 }

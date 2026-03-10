@@ -1,4 +1,6 @@
 {
-	"name": "arkanoid.brick-manager",
-	"references":[ "GUID:cbe0133cd4ce63248908c8ccd7281b42" ]
+  "name": "arkanoid.brick-manager",
+  "references": [
+    "GUID:cbe0133cd4ce63248908c8ccd7281b42"
+  ]
 }

@@ -8,10 +8,10 @@ namespace ArkanoidCloneProject.Paddle
 {
     public class PaddlePlacer
     {
-        private readonly IPaddleFactory _paddleFactory;
         private readonly CameraManager _cameraManager;
         private readonly IInputManager _inputManager;
-        
+        private readonly IPaddleFactory _paddleFactory;
+
         private Paddle _currentPaddle;
 
         [Inject]
@@ -24,16 +24,13 @@ namespace ArkanoidCloneProject.Paddle
 
         public Paddle Place()
         {
-            if (_currentPaddle == null)
-            {
-                _currentPaddle = _paddleFactory.Create();
-            }
-            
+            if (_currentPaddle == null) _currentPaddle = _paddleFactory.Create();
+
             Reposition();
             var paddleHalfWidth = _currentPaddle.transform.localScale.x * .5f;
             var cameraMinMaxX = _cameraManager.GetCameraMinMaxX(paddleHalfWidth);
             _currentPaddle.Initialize(_inputManager, cameraMinMaxX.Item1, cameraMinMaxX.Item2);
-            
+
             return _currentPaddle;
         }
 
@@ -49,11 +46,11 @@ namespace ArkanoidCloneProject.Paddle
         public void Reposition()
         {
             if (_currentPaddle == null) return;
-            
+
             var cameraBottomCoordinate = _cameraManager.GetCameraBottomCoordinate();
             var paddleY = cameraBottomCoordinate.y + 0.5f;
             _currentPaddle.transform.position = new Vector3(cameraBottomCoordinate.x, paddleY, 0f);
-            
+
             RecalculateBounds();
         }
 

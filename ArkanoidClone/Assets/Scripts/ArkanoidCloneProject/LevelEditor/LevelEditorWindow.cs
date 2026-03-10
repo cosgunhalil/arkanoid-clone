@@ -1,38 +1,30 @@
 using System.IO;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace ArkanoidCloneProject.LevelEditor.Editor
 {
     public class LevelEditorWindow : EditorWindow
     {
-        private LevelData _levelData;
+        private const float CELL_SIZE = 30f;
+        private readonly string _savePath = "Assets/Levels";
+        private string _addressablePrefix = "";
         private LevelEditorConfig _config;
+        private bool _isPainting;
+        private bool _isPowerUpMode;
         private LevelCollection _levelCollection;
-
-        private int _selectedPaletteIndex = 0;
-        private bool _isPowerUpMode = false;
-        private bool _isPainting = false;
-        private Vector2 _scrollPosition;
-        private Vector2 _paletteScrollPosition;
+        private LevelData _levelData;
         private Vector2 _levelListScrollPosition;
+        private string _levelName = "New_Level";
+        private int _newColumns = 8;
 
         private int _newRows = 10;
-        private int _newColumns = 8;
-        private string _levelName = "New_Level";
-        private string _savePath = "Assets/Levels";
-        private string _addressablePrefix = "";
+        private Vector2 _paletteScrollPosition;
+        private Vector2 _scrollPosition;
         private int _selectedLevelIndex = -1;
-        private bool _showLevelList = false;
 
-        private const float CELL_SIZE = 30f;
-
-        [MenuItem("Tools/Arkanoid/Level Editor")]
-        public static void ShowWindow()
-        {
-            var window = GetWindow<LevelEditorWindow>("Level Editor");
-            window.minSize = new Vector2(400, 600);
-        }
+        private int _selectedPaletteIndex;
+        private bool _showLevelList;
 
         private void OnEnable()
         {
@@ -53,22 +45,28 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             DrawGrid();
         }
 
+        [MenuItem("Tools/Arkanoid/Level Editor")]
+        public static void ShowWindow()
+        {
+            var window = GetWindow<LevelEditorWindow>("Level Editor");
+            window.minSize = new Vector2(400, 600);
+        }
+
         private void DrawToolbar()
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             EditorGUILayout.LabelField("Level Settings", EditorStyles.boldLabel);
 
-            _config = (LevelEditorConfig)EditorGUILayout.ObjectField("Config", _config, typeof(LevelEditorConfig), false);
-            _levelCollection = (LevelCollection)EditorGUILayout.ObjectField("Level Collection", _levelCollection, typeof(LevelCollection), false);
+            _config = (LevelEditorConfig)EditorGUILayout.ObjectField("Config", _config, typeof(LevelEditorConfig),
+                false);
+            _levelCollection = (LevelCollection)EditorGUILayout.ObjectField("Level Collection", _levelCollection,
+                typeof(LevelCollection), false);
 
             EditorGUILayout.Space(5);
 
             _levelName = EditorGUILayout.TextField("Level Name", _levelName);
-            if (_levelData != null)
-            {
-                _levelData.levelName = _levelName;
-            }
+            if (_levelData != null) _levelData.levelName = _levelName;
 
             _addressablePrefix = EditorGUILayout.TextField("Addressable Prefix", _addressablePrefix);
 
@@ -77,10 +75,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             EditorGUILayout.BeginHorizontal();
             _newRows = EditorGUILayout.IntField("Rows", _newRows);
             _newColumns = EditorGUILayout.IntField("Columns", _newColumns);
-            if (GUILayout.Button("Resize", GUILayout.Width(60)))
-            {
-                ResizeGrid();
-            }
+            if (GUILayout.Button("Resize", GUILayout.Width(60))) ResizeGrid();
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);
@@ -95,31 +90,17 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             EditorGUILayout.BeginHorizontal();
             GUI.backgroundColor = _isPowerUpMode ? Color.magenta : Color.white;
             if (GUILayout.Button(_isPowerUpMode ? "Power-Up Mode (ON)" : "Power-Up Mode (OFF)"))
-            {
                 _isPowerUpMode = !_isPowerUpMode;
-            }
             GUI.backgroundColor = Color.white;
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("New Level"))
-            {
-                NewLevel();
-            }
-            if (GUILayout.Button("Save"))
-            {
-                SaveLevel();
-            }
-            if (GUILayout.Button("Load"))
-            {
-                LoadLevel();
-            }
-            if (GUILayout.Button("Clear All"))
-            {
-                ClearAll();
-            }
+            if (GUILayout.Button("New Level")) NewLevel();
+            if (GUILayout.Button("Save")) SaveLevel();
+            if (GUILayout.Button("Load")) LoadLevel();
+            if (GUILayout.Button("Clear All")) ClearAll();
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
@@ -128,68 +109,47 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
         private void DrawLevelCollectionSection()
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            
+
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Level Collection Management", EditorStyles.boldLabel);
             if (GUILayout.Button(_showLevelList ? "Hide" : "Show", GUILayout.Width(50)))
-            {
                 _showLevelList = !_showLevelList;
-            }
             EditorGUILayout.EndHorizontal();
 
             if (_levelCollection == null)
             {
                 EditorGUILayout.HelpBox("Assign a LevelCollection to manage levels.", MessageType.Info);
-                if (GUILayout.Button("Create New Level Collection"))
-                {
-                    CreateNewLevelCollection();
-                }
+                if (GUILayout.Button("Create New Level Collection")) CreateNewLevelCollection();
             }
             else if (_showLevelList)
             {
                 EditorGUILayout.LabelField($"Total Levels: {_levelCollection.LevelCount}");
-                
-                _levelListScrollPosition = EditorGUILayout.BeginScrollView(_levelListScrollPosition, GUILayout.Height(150));
-                
+
+                _levelListScrollPosition =
+                    EditorGUILayout.BeginScrollView(_levelListScrollPosition, GUILayout.Height(150));
+
                 var levelAddresses = _levelCollection.GetAllLevelAddresses();
-                for (int i = 0; i < levelAddresses.Count; i++)
+                for (var i = 0; i < levelAddresses.Count; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    
+
                     GUI.backgroundColor = _selectedLevelIndex == i ? Color.cyan : Color.white;
                     if (GUILayout.Button($"{i}: {levelAddresses[i]}", GUILayout.ExpandWidth(true)))
-                    {
                         _selectedLevelIndex = i;
-                    }
                     GUI.backgroundColor = Color.white;
-                    
-                    if (GUILayout.Button("↑", GUILayout.Width(25)))
-                    {
-                        MoveLevelUp(i);
-                    }
-                    if (GUILayout.Button("↓", GUILayout.Width(25)))
-                    {
-                        MoveLevelDown(i);
-                    }
-                    if (GUILayout.Button("X", GUILayout.Width(25)))
-                    {
-                        RemoveLevelFromCollection(i);
-                    }
-                    
+
+                    if (GUILayout.Button("↑", GUILayout.Width(25))) MoveLevelUp(i);
+                    if (GUILayout.Button("↓", GUILayout.Width(25))) MoveLevelDown(i);
+                    if (GUILayout.Button("X", GUILayout.Width(25))) RemoveLevelFromCollection(i);
+
                     EditorGUILayout.EndHorizontal();
                 }
-                
+
                 EditorGUILayout.EndScrollView();
 
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Add Current Level"))
-                {
-                    AddCurrentLevelToCollection();
-                }
-                if (GUILayout.Button("Remove Selected"))
-                {
-                    RemoveSelectedLevelFromCollection();
-                }
+                if (GUILayout.Button("Add Current Level")) AddCurrentLevelToCollection();
+                if (GUILayout.Button("Remove Selected")) RemoveSelectedLevelFromCollection();
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -204,33 +164,23 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
             if (_config == null)
             {
                 EditorGUILayout.HelpBox("Assign a LevelEditorConfig to use custom palette.", MessageType.Info);
-                if (GUILayout.Button("Create New Config"))
-                {
-                    CreateNewConfig();
-                }
+                if (GUILayout.Button("Create New Config")) CreateNewConfig();
             }
 
             _paletteScrollPosition = EditorGUILayout.BeginScrollView(_paletteScrollPosition, GUILayout.Height(60));
             EditorGUILayout.BeginHorizontal();
 
             GUI.backgroundColor = _selectedPaletteIndex == -1 ? Color.green : Color.white;
-            if (GUILayout.Button("Empty", GUILayout.Width(50), GUILayout.Height(40)))
-            {
-                _selectedPaletteIndex = -1;
-            }
+            if (GUILayout.Button("Empty", GUILayout.Width(50), GUILayout.Height(40))) _selectedPaletteIndex = -1;
 
             if (_config != null)
-            {
-                for (int i = 0; i < _config.palette.Count; i++)
+                for (var i = 0; i < _config.palette.Count; i++)
                 {
                     var entry = _config.palette[i];
                     GUI.backgroundColor = _selectedPaletteIndex == i ? Color.green : entry.editorColor;
                     if (GUILayout.Button(entry.name, GUILayout.Width(50), GUILayout.Height(40)))
-                    {
                         _selectedPaletteIndex = i;
-                    }
                 }
-            }
 
             GUI.backgroundColor = Color.white;
             EditorGUILayout.EndHorizontal();
@@ -247,37 +197,29 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
-            Event e = Event.current;
-            Rect gridRect = GUILayoutUtility.GetRect(
+            var e = Event.current;
+            var gridRect = GUILayoutUtility.GetRect(
                 _levelData.gridSize.columns * CELL_SIZE,
                 _levelData.gridSize.rows * CELL_SIZE
             );
 
-            for (int row = 0; row < _levelData.gridSize.rows; row++)
+            for (var row = 0; row < _levelData.gridSize.rows; row++)
+            for (var col = 0; col < _levelData.gridSize.columns; col++)
             {
-                for (int col = 0; col < _levelData.gridSize.columns; col++)
-                {
-                    Rect cellRect = new Rect(
-                        gridRect.x + col * CELL_SIZE,
-                        gridRect.y + row * CELL_SIZE,
-                        CELL_SIZE - 1,
-                        CELL_SIZE - 1
-                    );
+                var cellRect = new Rect(
+                    gridRect.x + col * CELL_SIZE,
+                    gridRect.y + row * CELL_SIZE,
+                    CELL_SIZE - 1,
+                    CELL_SIZE - 1
+                );
 
-                    TileData tile = _levelData.GetTile(row, col);
-                    Color cellColor = GetTileColor(tile);
-                    EditorGUI.DrawRect(cellRect, cellColor);
+                var tile = _levelData.GetTile(row, col);
+                var cellColor = GetTileColor(tile);
+                EditorGUI.DrawRect(cellRect, cellColor);
 
-                    if (tile != null && tile.hasPowerUp)
-                    {
-                        DrawPowerUpIndicator(cellRect);
-                    }
+                if (tile != null && tile.hasPowerUp) DrawPowerUpIndicator(cellRect);
 
-                    if (cellRect.Contains(e.mousePosition))
-                    {
-                        HandleCellInput(e, row, col);
-                    }
-                }
+                if (cellRect.Contains(e.mousePosition)) HandleCellInput(e, row, col);
             }
 
             EditorGUILayout.EndScrollView();
@@ -305,15 +247,12 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void ProcessCellClick(Event e, int row, int col)
         {
-            TileData tile = _levelData.GetTile(row, col);
+            var tile = _levelData.GetTile(row, col);
             if (tile == null) return;
 
             if (_isPowerUpMode)
             {
-                if (e.button == 0)
-                {
-                    tile.hasPowerUp = !tile.hasPowerUp;
-                }
+                if (e.button == 0) tile.hasPowerUp = !tile.hasPowerUp;
             }
             else
             {
@@ -336,27 +275,22 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
         {
             if (tile == null || tile.IsEmpty)
             {
-                if (_config != null)
-                {
-                    return _config.emptyTileColor;
-                }
+                if (_config != null) return _config.emptyTileColor;
                 return new Color(0.2f, 0.2f, 0.2f, 1f);
             }
 
             if (_config != null && tile.typeIndex >= 0 && tile.typeIndex < _config.palette.Count)
-            {
                 return _config.palette[tile.typeIndex].editorColor;
-            }
 
             return new Color(0.2f, 0.2f, 0.2f, 1f);
         }
 
         private void DrawPowerUpIndicator(Rect cellRect)
         {
-            Color originalColor = GUI.color;
+            var originalColor = GUI.color;
             GUI.color = _config != null ? _config.powerUpIndicatorColor : Color.magenta;
 
-            GUIStyle style = new GUIStyle(GUI.skin.label)
+            var style = new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.MiddleCenter,
                 fontStyle = FontStyle.Bold,
@@ -369,10 +303,11 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void CreateNewConfig()
         {
-            string path = EditorUtility.SaveFilePanelInProject("Create Level Editor Config", "LevelEditorConfig", "asset", "Choose location for the config file");
+            var path = EditorUtility.SaveFilePanelInProject("Create Level Editor Config", "LevelEditorConfig", "asset",
+                "Choose location for the config file");
             if (string.IsNullOrEmpty(path)) return;
 
-            var config = ScriptableObject.CreateInstance<LevelEditorConfig>();
+            var config = CreateInstance<LevelEditorConfig>();
             AssetDatabase.CreateAsset(config, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -385,10 +320,11 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void CreateNewLevelCollection()
         {
-            string path = EditorUtility.SaveFilePanelInProject("Create Level Collection", "LevelCollection", "asset", "Choose location for the level collection file");
+            var path = EditorUtility.SaveFilePanelInProject("Create Level Collection", "LevelCollection", "asset",
+                "Choose location for the level collection file");
             if (string.IsNullOrEmpty(path)) return;
 
-            var collection = ScriptableObject.CreateInstance<LevelCollection>();
+            var collection = CreateInstance<LevelCollection>();
             AssetDatabase.CreateAsset(collection, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -407,7 +343,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
                 return;
             }
 
-            string addressableName = GetAddressableName();
+            var addressableName = GetAddressableName();
             _levelCollection.AddLevel(addressableName);
             EditorUtility.SetDirty(_levelCollection);
             AssetDatabase.SaveAssets();
@@ -417,10 +353,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void RemoveSelectedLevelFromCollection()
         {
-            if (_levelCollection == null || _selectedLevelIndex < 0)
-            {
-                return;
-            }
+            if (_levelCollection == null || _selectedLevelIndex < 0) return;
 
             _levelCollection.RemoveLevelAt(_selectedLevelIndex);
             EditorUtility.SetDirty(_levelCollection);
@@ -431,27 +364,18 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void RemoveLevelFromCollection(int index)
         {
-            if (_levelCollection == null)
-            {
-                return;
-            }
+            if (_levelCollection == null) return;
 
             _levelCollection.RemoveLevelAt(index);
             EditorUtility.SetDirty(_levelCollection);
             AssetDatabase.SaveAssets();
 
-            if (_selectedLevelIndex == index)
-            {
-                _selectedLevelIndex = -1;
-            }
+            if (_selectedLevelIndex == index) _selectedLevelIndex = -1;
         }
 
         private void MoveLevelUp(int index)
         {
-            if (_levelCollection == null || index <= 0)
-            {
-                return;
-            }
+            if (_levelCollection == null || index <= 0) return;
 
             _levelCollection.SwapLevels(index, index - 1);
             EditorUtility.SetDirty(_levelCollection);
@@ -460,10 +384,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void MoveLevelDown(int index)
         {
-            if (_levelCollection == null || index >= _levelCollection.LevelCount - 1)
-            {
-                return;
-            }
+            if (_levelCollection == null || index >= _levelCollection.LevelCount - 1) return;
 
             _levelCollection.SwapLevels(index, index + 1);
             EditorUtility.SetDirty(_levelCollection);
@@ -472,10 +393,7 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private string GetAddressableName()
         {
-            if (string.IsNullOrEmpty(_addressablePrefix))
-            {
-                return _levelName;
-            }
+            if (string.IsNullOrEmpty(_addressablePrefix)) return _levelName;
             return $"{_addressablePrefix}{_levelName}";
         }
 
@@ -504,31 +422,26 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void SaveLevel()
         {
-            if (!Directory.Exists(_savePath))
-            {
-                Directory.CreateDirectory(_savePath);
-            }
+            if (!Directory.Exists(_savePath)) Directory.CreateDirectory(_savePath);
 
-            string path = EditorUtility.SaveFilePanel("Save Level", _savePath, _levelData.levelName, "json");
+            var path = EditorUtility.SaveFilePanel("Save Level", _savePath, _levelData.levelName, "json");
             if (string.IsNullOrEmpty(path)) return;
 
-            string json = JsonUtility.ToJson(_levelData, true);
+            var json = JsonUtility.ToJson(_levelData, true);
             File.WriteAllText(path, json);
             AssetDatabase.Refresh();
 
             if (_levelCollection != null)
             {
-                string addressableName = GetAddressableName();
+                var addressableName = GetAddressableName();
                 if (!_levelCollection.GetAllLevelAddresses().Contains(addressableName))
-                {
-                    if (EditorUtility.DisplayDialog("Add to Collection", 
-                        $"Do you want to add '{addressableName}' to the level collection?", "Yes", "No"))
+                    if (EditorUtility.DisplayDialog("Add to Collection",
+                            $"Do you want to add '{addressableName}' to the level collection?", "Yes", "No"))
                     {
                         _levelCollection.AddLevel(addressableName);
                         EditorUtility.SetDirty(_levelCollection);
                         AssetDatabase.SaveAssets();
                     }
-                }
             }
 
             Debug.Log($"Level saved to: {path}");
@@ -536,10 +449,10 @@ namespace ArkanoidCloneProject.LevelEditor.Editor
 
         private void LoadLevel()
         {
-            string path = EditorUtility.OpenFilePanel("Load Level", _savePath, "json");
+            var path = EditorUtility.OpenFilePanel("Load Level", _savePath, "json");
             if (string.IsNullOrEmpty(path)) return;
 
-            string json = File.ReadAllText(path);
+            var json = File.ReadAllText(path);
             _levelData = JsonUtility.FromJson<LevelData>(json);
 
             _levelName = _levelData.levelName;

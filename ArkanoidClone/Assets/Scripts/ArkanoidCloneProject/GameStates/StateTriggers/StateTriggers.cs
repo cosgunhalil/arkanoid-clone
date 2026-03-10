@@ -1,7 +1,7 @@
-namespace ArkanoidProject.State 
+namespace ArkanoidProject.State
 {
-    public enum StateTriggers 
-    { 
+    public enum StateTriggers
+    {
         NONE,
         RETURN_TO_MAIN_MENU_REQUEST,
         CONTINUE_GAME_REQUEST,

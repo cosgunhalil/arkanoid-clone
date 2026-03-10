@@ -35,6 +35,7 @@ namespace ArkanoidProject.State
             _ballManager.OnAllBallsLost += HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
+            _inputSystem.OnESCButtonUp += HandlePauseRequest;
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -118,6 +119,11 @@ namespace ArkanoidProject.State
             float screenAspect = (float)Screen.width / Screen.height;
             return camera.orthographicSize * 2f * screenAspect;
         }
+        
+        private void HandlePauseRequest()
+        {
+            SendTrigger((int)StateTriggers.PAUSE_GAME_REQUEST);
+        }
 
         protected override void OnExit()
         {
@@ -129,6 +135,7 @@ namespace ArkanoidProject.State
             _ballManager.OnAllBallsLost -= HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged -= HandleScoreChanged;
+            _inputSystem.OnESCButtonUp -= HandlePauseRequest;
             
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
