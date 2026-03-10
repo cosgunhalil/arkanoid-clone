@@ -16,6 +16,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "f2bae8f8-ab03-4570-a801-4c17a852836f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "MoveRight",
                     "type": "Button",
                     "id": "4d831e1e-3592-44e3-a419-5f13c3cb1e5d",
@@ -43,6 +52,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf1ee28b-a903-4348-be16-f3070269c310",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

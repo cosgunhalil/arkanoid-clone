@@ -1,4 +1,6 @@
 {
-	"name": "arkanoid.state.end-game",
-	"references":[ "GUID:90cdbd5d1a0f5d84da9e350db19b56ca" ]
+  "name": "arkanoid.state.end-game",
+  "references": [
+    "GUID:90cdbd5d1a0f5d84da9e350db19b56ca"
+  ]
 }

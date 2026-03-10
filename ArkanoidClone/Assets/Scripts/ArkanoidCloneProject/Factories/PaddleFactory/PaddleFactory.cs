@@ -5,8 +5,8 @@ namespace ArkanoidCloneProject.Paddle
 {
     public class PaddleFactory : IPaddleFactory
     {
-        private readonly IObjectResolver _resolver;
         private readonly GameObject _paddlePrefab;
+        private readonly IObjectResolver _resolver;
 
         [Inject]
         public PaddleFactory(IObjectResolver resolver, GameObject paddlePrefab)
@@ -17,8 +17,8 @@ namespace ArkanoidCloneProject.Paddle
 
         public Paddle Create()
         {
-            GameObject paddleObject = Object.Instantiate(_paddlePrefab);
-            Paddle paddle = paddleObject.GetComponent<Paddle>();
+            var paddleObject = Object.Instantiate(_paddlePrefab);
+            var paddle = paddleObject.GetComponent<Paddle>();
             _resolver.Inject(paddle);
             return paddle;
         }

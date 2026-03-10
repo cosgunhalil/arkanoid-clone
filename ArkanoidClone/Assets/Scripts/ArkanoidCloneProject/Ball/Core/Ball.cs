@@ -20,6 +20,7 @@ namespace ArkanoidCloneProject.Ball
         private Paddle.Paddle _paddle;
         private Vector2 _velocity;
         private BallState _state;
+        private Vector2 _velocityBeforePause;
 
         public event Action OnBallDeath;
 
@@ -194,6 +195,17 @@ namespace ArkanoidCloneProject.Ball
             var normal = collision.contacts[0].normal;
             var correctedPosition = _rigidbody.position + normal * _skinWidth;
             transform.position = correctedPosition;
+        }
+
+        public void Pause()
+        {
+            _velocityBeforePause = _velocity;
+            _velocity = Vector2.zero;
+        }
+
+        public void Resume()
+        {
+            _velocity = _velocityBeforePause;
         }
     }
 }

@@ -1,17 +1,17 @@
 {
-    "name": "arkanoid.camera-manager",
-    "rootNamespace": "",
-    "references": [
-        "GUID:589214d61287bb94ead2e00f7dab4ed0",
-        "arkanoid.camera.bounds"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "arkanoid.camera-manager",
+  "rootNamespace": "",
+  "references": [
+    "GUID:589214d61287bb94ead2e00f7dab4ed0",
+    "arkanoid.camera.bounds"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

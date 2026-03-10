@@ -21,7 +21,17 @@ namespace ArkanoidCloneProject.LifetimeScope
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private BallSettings ballSettings;
         [SerializeField] private LevelCollection levelCollection;
-        
+        [SerializeField] private PauseGameUI pauseGameUIPrefab;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            var go = new GameObject("AppController");
+            var appController = go.AddComponent<AppController>();
+            Container.Inject(appController);
+        }
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<VContainerStateFactory>(Lifetime.Singleton).As<IStateFactory>();
@@ -32,32 +42,21 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.Register<PrepareGameState>(Lifetime.Transient);
             builder.Register<PauseGameState>(Lifetime.Transient);
             builder.Register<EndGameState>(Lifetime.Transient);
-            builder.RegisterComponentInNewPrefab<LevelCreator>(levelCreatorPrefab, Lifetime.Singleton);
-            builder.RegisterComponentInNewPrefab<CameraManager>(cameraManagerPrefab, Lifetime.Singleton);
-            builder.RegisterComponentInNewPrefab<BorderManager>(borderManagerPrefab, Lifetime.Singleton);
-            
+            builder.RegisterComponentInNewPrefab(levelCreatorPrefab, Lifetime.Singleton);
+            builder.RegisterComponentInNewPrefab(cameraManagerPrefab, Lifetime.Singleton);
+            builder.RegisterComponentInNewPrefab(borderManagerPrefab, Lifetime.Singleton);
+
             builder.RegisterInstance(paddlePrefab).As<GameObject>();
             builder.Register<PaddleFactory>(Lifetime.Singleton).As<IPaddleFactory>();
             builder.Register<PaddlePlacer>(Lifetime.Singleton);
-            
-            builder.Register<BrickManager>(Lifetime.Singleton);
-            BallInstaller.Install(builder, ballSettings, ballPrefab);
-            
-            if (levelCollection != null)
-            {
-                builder.RegisterInstance(levelCollection);
-            }
-            
-            Debug.Log("GameLifetimeScope Configure");
-        }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            var go = new GameObject("AppController");
-            var appController = go.AddComponent<AppController>();
-            Container.Inject(appController);
+            builder.Register<BrickManager>(Lifetime.Singleton);
+            builder.RegisterComponentInNewPrefab<PauseGameUI>(pauseGameUIPrefab, Lifetime.Singleton);
+            BallInstaller.Install(builder, ballSettings, ballPrefab);
+
+            if (levelCollection != null) builder.RegisterInstance(levelCollection);
+
+            Debug.Log("GameLifetimeScope Configure");
         }
     }
 }
