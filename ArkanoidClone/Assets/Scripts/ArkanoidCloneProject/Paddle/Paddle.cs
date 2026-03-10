@@ -12,6 +12,7 @@ namespace ArkanoidCloneProject.Paddle
         private bool _isMovingRight;
         private float _minX;
         private float _maxX;
+        private bool _isPaused;
 
         public void Initialize(IInputManager inputManager, float minX, float maxX)
         {
@@ -53,7 +54,7 @@ namespace ArkanoidCloneProject.Paddle
 
         private void Update()
         {
-            if (_inputManager == null) return;
+            if (_inputManager == null || _isPaused) return;
 
             float direction = 0f;
             
@@ -83,6 +84,18 @@ namespace ArkanoidCloneProject.Paddle
             _inputManager.OnLeftButtonUp -= HandleLeftButtonUp;
             _inputManager.OnRightButtonDown -= HandleRightButtonDown;
             _inputManager.OnRightButtonUp -= HandleRightButtonUp;
+        }
+        
+        public void Pause()
+        {
+            _isPaused = true;
+            _isMovingLeft = false;
+            _isMovingRight = false;
+        }
+
+        public void Resume()
+        {
+            _isPaused = false;
         }
     }
 }

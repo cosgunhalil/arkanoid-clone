@@ -67,5 +67,17 @@ namespace ArkanoidCloneProject.Paddle
                 _currentPaddle = null;
             }
         }
+        
+        public void PausePaddle()
+        {
+            if (_currentPaddle == null) return;
+            _currentPaddle.Pause();
+        }
+
+        public void ResumePaddle()
+        {
+            if (_currentPaddle == null) return;
+            _currentPaddle.Resume();
+        }
     }
 }

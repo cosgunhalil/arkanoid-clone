@@ -19,14 +19,17 @@ namespace ArkanoidProject.State
         [Inject] private PaddlePlacer _paddlePlacer;
         [Inject] private BallManager _ballManager;
         [Inject] private BrickManager _brickManager;
+        
+        private bool _isTransitioningToPause;
 
         private Ball _currentBall;
         private bool _isTransitioningLevel;
 
-        protected override async void OnEnter()
+        protected override void OnEnter()
         {
             Debug.Log("InGameState.OnEnter");
 
+            _isTransitioningToPause = false;
             _isTransitioningLevel = false;
             
             _levelCreator.OnLevelCreated += HandleLevelCreated;
@@ -122,6 +125,8 @@ namespace ArkanoidProject.State
         
         private void HandlePauseRequest()
         {
+            if (_isTransitioningToPause) return;
+            _isTransitioningToPause = true;
             SendTrigger((int)StateTriggers.PAUSE_GAME_REQUEST);
         }
 
