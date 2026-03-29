@@ -16,7 +16,8 @@
     "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
     "GUID:cbe0133cd4ce63248908c8ccd7281b42",
     "GUID:f51ebe6a0ceec4240a699833d6309b23",
-    "GUID:7c08ff3c6726c244b9d6953c695b8858"
+    "GUID:7c08ff3c6726c244b9d6953c695b8858",
+    "arkanoid.health-system"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

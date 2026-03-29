@@ -135,7 +135,7 @@ namespace ArkanoidCloneProject.Ball
             
             string tag = collision.gameObject.tag;
             
-            if (tag == "DeathZone")
+            if (tag == "Hazard")
             {
                 HandleDeathZoneCollision();
                 return;

@@ -3,6 +3,8 @@ using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
 using ArkanoidCloneProject.Physics;
+using ArkanoidCloneProject.Player;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using VContainer;
 
@@ -19,19 +21,17 @@ namespace ArkanoidProject.State
         [Inject] private PaddlePlacer _paddlePlacer;
         [Inject] private BallManager _ballManager;
         [Inject] private BrickManager _brickManager;
-        
-        private bool _isTransitioningToPause;
+        [Inject] private PlayerHealth _playerHealth;
 
-        private Ball _currentBall;
+        private bool _isTransitioningToPause;
         private bool _isTransitioningLevel;
+        private int _retryLevelIndex;
 
         protected override void OnEnter()
         {
-            Debug.Log("InGameState.OnEnter");
-
             _isTransitioningToPause = false;
             _isTransitioningLevel = false;
-            
+
             _levelCreator.OnLevelCreated += HandleLevelCreated;
             _levelCreator.OnAllLevelsCompleted += HandleAllLevelsCompleted;
             _levelCreator.OnLevelStarted += HandleLevelStarted;
@@ -39,6 +39,15 @@ namespace ArkanoidProject.State
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged += HandleScoreChanged;
             _inputSystem.OnESCButtonUp += HandlePauseRequest;
+
+            _retryLevelIndex = _levelCreator.CurrentLevelIndex;
+
+            LoadRetryLevel();
+        }
+
+        private void LoadRetryLevel()
+        {
+            _levelCreator.LoadLevelAtIndexAsync(_retryLevelIndex).Forget();
         }
 
         private void HandleLevelCreated(LevelBounds levelBounds)
@@ -54,23 +63,20 @@ namespace ArkanoidProject.State
             _cameraManager.SetMargins(leftMargin, rightMargin, topMargin, bottomMargin);
             _cameraManager.FocusOnLevel(levelBounds);
             _borderManager.CreateBorders();
-            
+
             _paddlePlacer.Reposition();
-            
+
             _brickManager.UnregisterAllBricks();
             _brickManager.RegisterBricksFromGameObjects(_levelCreator.GetSpawnedBricks());
-            
+
             SpawnBall();
-            
+
             _isTransitioningLevel = false;
         }
 
         private void HandleLevelStarted(int levelIndex)
         {
-            Debug.Log($"Starting Level {levelIndex + 1}");
-            
             _ballManager.RemoveAllBalls();
-            
             _isTransitioningLevel = true;
         }
 
@@ -79,29 +85,32 @@ namespace ArkanoidProject.State
             Paddle paddle = _paddlePlacer.GetCurrentPaddle();
             if (paddle != null)
             {
-                _currentBall = _ballManager.SpawnBallAbovePaddle(paddle);
+                _ballManager.SpawnBallAbovePaddle(paddle);
             }
         }
 
         private void HandleAllBallsLost()
         {
-            if (_isTransitioningLevel)
+            if (_isTransitioningLevel) return;
+
+            _playerHealth.TakeDamage(1);
+
+            if (_playerHealth.CurrentHealth <= 0)
             {
+                SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
                 return;
             }
-            
-            Debug.Log("All balls lost!");
-            SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
+
+            SpawnBall();
         }
 
         private void HandleAllBricksDestroyed()
         {
-            Debug.Log($"Level {_levelCreator.CurrentLevelIndex + 1} Complete!");
+            _retryLevelIndex = _levelCreator.CurrentLevelIndex;
         }
 
         private void HandleAllLevelsCompleted()
         {
-            Debug.Log("All levels completed! You win!");
             SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
         }
 
@@ -122,7 +131,7 @@ namespace ArkanoidProject.State
             float screenAspect = (float)Screen.width / Screen.height;
             return camera.orthographicSize * 2f * screenAspect;
         }
-        
+
         private void HandlePauseRequest()
         {
             if (_isTransitioningToPause) return;
@@ -132,8 +141,6 @@ namespace ArkanoidProject.State
 
         protected override void OnExit()
         {
-            Debug.Log("InGameState.OnExit");
-
             _levelCreator.OnLevelCreated -= HandleLevelCreated;
             _levelCreator.OnAllLevelsCompleted -= HandleAllLevelsCompleted;
             _levelCreator.OnLevelStarted -= HandleLevelStarted;
@@ -141,7 +148,7 @@ namespace ArkanoidProject.State
             _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
             _brickManager.OnScoreChanged -= HandleScoreChanged;
             _inputSystem.OnESCButtonUp -= HandlePauseRequest;
-            
+
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
             _paddlePlacer.RemovePaddle();

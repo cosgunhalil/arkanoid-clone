@@ -56,3 +56,5 @@ MonoBehaviour:
   ballSettings: {fileID: 11400000, guid: a036dd93c2593ab428f834f7b27d4240, type: 2}
   levelCollection: {fileID: 11400000, guid: 6654e13468d92154182b125648db0941, type: 2}
   pauseGameUIPrefab: {fileID: 2157191642762213408, guid: ec907307c9ed7314ba008b0477c50060, type: 3}
+  endGameUIPrefab: {fileID: 5918016981985253063, guid: a2a75b579918b39479a77cd8bd25b294, type: 3}
+  playerStartHealth: 3

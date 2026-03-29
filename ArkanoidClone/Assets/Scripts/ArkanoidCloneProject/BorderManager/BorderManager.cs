@@ -28,7 +28,8 @@ namespace ArkanoidCloneProject.LevelEditor
             
             var cameraBounds = _cameraManager.GetCameraBounds();
             _topWall = CreateWall("Wall", GetTopWallPosition(cameraBounds), GetHorizontalWallSize(cameraBounds));
-            _bottomWall = CreateWall("Wall", GetBottomWallPosition(cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _bottomWall = CreateWall("Hazard", GetBottomWallPosition(cameraBounds), GetHorizontalWallSize(cameraBounds));
+            _bottomWall.gameObject.tag  = "Hazard";
             _leftWall = CreateWall("Wall", GetLeftWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
             _rightWall = CreateWall("Wall", GetRightWallPosition(cameraBounds), GetVerticalWallSize(cameraBounds));
         }

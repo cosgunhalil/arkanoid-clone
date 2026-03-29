@@ -21,7 +21,9 @@
     "GUID:4e1a0d5581a5e7f45b7f38061907fa59",
     "GUID:15bbb87668bc13f4dbf5685d5dccee0a",
     "GUID:0601ffb15efa15a4c86d5b7d09dfbbe4",
-    "arkanoid.ui.pause"
+    "arkanoid.ui.pause",
+    "arkanoid-clone.ui.end-game",
+    "arkanoid.health-system"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
