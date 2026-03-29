@@ -1,6 +1,22 @@
 {
-  "name": "arkanoid.state.end-game",
-  "references": [
-    "GUID:90cdbd5d1a0f5d84da9e350db19b56ca"
-  ]
+    "name": "arkanoid.state.end-game",
+    "rootNamespace": "",
+    "references": [
+        "GUID:90cdbd5d1a0f5d84da9e350db19b56ca",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:f0e10e494139ee5469452bac43d1add8",
+        "GUID:96911ae0b2288d64abf907e948d1ec68",
+        "arkanoid.health-system",
+        "GUID:7c08ff3c6726c244b9d6953c695b8858",
+        "arkanoid-clone.ui.end-game"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

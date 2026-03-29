@@ -8,6 +8,7 @@ TagManager:
   - Paddle
   - Ball
   - Brick
+  - Hazard
   layers:
   - Default
   - TransparentFX

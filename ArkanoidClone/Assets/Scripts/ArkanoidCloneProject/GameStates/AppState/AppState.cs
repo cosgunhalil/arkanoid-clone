@@ -39,6 +39,7 @@ namespace ArkanoidProject.State
             AddTransition(inGameState, pauseState, (int)StateTriggers.PAUSE_GAME_REQUEST);
             AddTransition(pauseState, inGameState, (int)StateTriggers.CONTINUE_GAME_REQUEST);
             AddTransition(inGameState, endGameState, (int)StateTriggers.GAME_OVER_REQUEST);
+            AddTransition(endGameState, inGameState, (int)StateTriggers.RETRY_GAME_REQUEST);
         }
     }
 }
