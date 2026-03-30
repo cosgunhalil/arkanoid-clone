@@ -1,0 +1,21 @@
+{
+    "name": "arkanoid-clone.ui.in-game-hud-presenter",
+    "rootNamespace": "",
+    "references": [
+        "arkanoid-clone.ui.in-game",
+        "arkanoid.health-system",
+        "arkanoid.brick-manager",
+        "arkanoid.level-creator",
+        "arkanoid.level-bounds",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

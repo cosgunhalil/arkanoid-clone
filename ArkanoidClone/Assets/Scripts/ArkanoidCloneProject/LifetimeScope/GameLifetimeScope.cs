@@ -6,6 +6,7 @@ using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
 using ArkanoidCloneProject.Physics;
 using ArkanoidCloneProject.Player;
+using ArkanoidCloneProject.UserInterface;
 using ArkanoidProject.State;
 using UnityEngine;
 using VContainer;
@@ -24,6 +25,7 @@ namespace ArkanoidCloneProject.LifetimeScope
         [SerializeField] private LevelCollection levelCollection;
         [SerializeField] private PauseGameUI pauseGameUIPrefab;
         [SerializeField] private EndGameUI endGameUIPrefab;
+        [SerializeField] private InGameHUD inGameHUDPrefab;
         [SerializeField] private int playerStartHealth = 3;
 
         protected override void Awake()
@@ -56,8 +58,10 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.Register<BrickManager>(Lifetime.Singleton);
             builder.RegisterComponentInNewPrefab<PauseGameUI>(pauseGameUIPrefab, Lifetime.Singleton);
             builder.RegisterComponentInNewPrefab<EndGameUI>(endGameUIPrefab, Lifetime.Singleton);
+            builder.RegisterComponentInNewPrefab<InGameHUD>(inGameHUDPrefab, Lifetime.Singleton);
 
             builder.Register<PlayerHealth>(Lifetime.Singleton).WithParameter(playerStartHealth);
+            builder.Register<InGameHUDPresenter>(Lifetime.Singleton);
 
             BallInstaller.Install(builder, ballSettings, ballPrefab);
 

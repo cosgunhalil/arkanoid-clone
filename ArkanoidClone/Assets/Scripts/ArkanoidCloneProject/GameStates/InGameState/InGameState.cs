@@ -1,9 +1,9 @@
-using ArkanoidCloneProject.Ball;
-using ArkanoidCloneProject.InputSystem;
 using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
 using ArkanoidCloneProject.Physics;
 using ArkanoidCloneProject.Player;
+using ArkanoidCloneProject.InputSystem;
+using ArkanoidCloneProject.UserInterface;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using VContainer;
@@ -22,6 +22,7 @@ namespace ArkanoidProject.State
         [Inject] private BallManager _ballManager;
         [Inject] private BrickManager _brickManager;
         [Inject] private PlayerHealth _playerHealth;
+        [Inject] private InGameHUDPresenter _hudPresenter;
 
         private bool _isTransitioningToPause;
         private bool _isTransitioningLevel;
@@ -37,8 +38,9 @@ namespace ArkanoidProject.State
             _levelCreator.OnLevelStarted += HandleLevelStarted;
             _ballManager.OnAllBallsLost += HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed += HandleAllBricksDestroyed;
-            _brickManager.OnScoreChanged += HandleScoreChanged;
             _inputSystem.OnESCButtonUp += HandlePauseRequest;
+
+            _hudPresenter.Enable();
 
             _retryLevelIndex = _levelCreator.CurrentLevelIndex;
 
@@ -84,9 +86,7 @@ namespace ArkanoidProject.State
         {
             Paddle paddle = _paddlePlacer.GetCurrentPaddle();
             if (paddle != null)
-            {
                 _ballManager.SpawnBallAbovePaddle(paddle);
-            }
         }
 
         private void HandleAllBallsLost()
@@ -112,11 +112,6 @@ namespace ArkanoidProject.State
         private void HandleAllLevelsCompleted()
         {
             SendTrigger((int)StateTriggers.GAME_OVER_REQUEST);
-        }
-
-        private void HandleScoreChanged(int newScore)
-        {
-            Debug.Log($"Score: {newScore}");
         }
 
         private float CalculateWorldHeight()
@@ -146,8 +141,9 @@ namespace ArkanoidProject.State
             _levelCreator.OnLevelStarted -= HandleLevelStarted;
             _ballManager.OnAllBallsLost -= HandleAllBallsLost;
             _brickManager.OnAllBricksDestroyed -= HandleAllBricksDestroyed;
-            _brickManager.OnScoreChanged -= HandleScoreChanged;
             _inputSystem.OnESCButtonUp -= HandlePauseRequest;
+
+            _hudPresenter.Disable();
 
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();

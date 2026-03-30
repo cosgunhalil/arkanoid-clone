@@ -23,7 +23,9 @@
     "GUID:0601ffb15efa15a4c86d5b7d09dfbbe4",
     "arkanoid.ui.pause",
     "arkanoid-clone.ui.end-game",
-    "arkanoid.health-system"
+    "arkanoid.health-system",
+    "arkanoid-clone.ui.in-game",
+    "arkanoid-clone.ui.in-game-hud-presenter"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
