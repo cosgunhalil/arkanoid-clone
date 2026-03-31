@@ -19,5 +19,6 @@ namespace ArkanoidCloneProject.LevelEditor
         public string name;
         public GameObject prefab;
         public Color editorColor = Color.white;
+        public int health = 1;
     }
 }

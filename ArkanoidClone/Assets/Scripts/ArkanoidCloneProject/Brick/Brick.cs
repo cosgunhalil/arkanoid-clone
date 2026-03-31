@@ -6,11 +6,12 @@ namespace ArkanoidCloneProject.Physics
     [RequireComponent(typeof(BoxCollider2D))]
     public class Brick : MonoBehaviour
     {
-        [SerializeField] private int _health = 1;
         [SerializeField] private int _scoreValue = 10;
-        
+
         private BoxCollider2D _collider;
         private int _currentHealth;
+        private int _health;
+        private Color _originalColor;
 
         public event Action<Brick> OnBrickDestroyed;
         public event Action<Brick, int> OnBrickDamaged;
@@ -21,7 +22,6 @@ namespace ArkanoidCloneProject.Physics
         private void Awake()
         {
             _collider = GetComponent<BoxCollider2D>();
-            _currentHealth = _health;
             gameObject.tag = "Brick";
         }
 
@@ -37,11 +37,22 @@ namespace ArkanoidCloneProject.Physics
         {
             _currentHealth -= damage;
             OnBrickDamaged?.Invoke(this, _currentHealth);
-            
+
+            UpdateColor();
+
             if (_currentHealth <= 0)
             {
                 DestroyBrick();
             }
+        }
+
+        private void UpdateColor()
+        {
+            var renderer = GetComponent<SpriteRenderer>();
+            if (renderer == null) return;
+
+            float healthRatio = _health > 0 ? (float)_currentHealth / _health : 0f;
+            renderer.color = Color.Lerp(Color.black, _originalColor, healthRatio);
         }
 
         private void DestroyBrick()
@@ -59,6 +70,14 @@ namespace ArkanoidCloneProject.Physics
         public void SetScoreValue(int value)
         {
             _scoreValue = value;
+        }
+
+        public void SetColor(Color color)
+        {
+            _originalColor = color;
+            var renderer = GetComponent<SpriteRenderer>();
+            if (renderer != null)
+                renderer.color = color;
         }
 
         public void SetRandomPowerUp()

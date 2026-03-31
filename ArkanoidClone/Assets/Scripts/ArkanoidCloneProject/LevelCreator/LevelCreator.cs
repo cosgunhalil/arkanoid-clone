@@ -180,6 +180,9 @@ namespace ArkanoidCloneProject.LevelEditor
                             tileObject.AddComponent<BoxCollider2D>();
                             tileObject.tag = "Brick";
                             var brick = tileObject.AddComponent<Brick>();
+                            var paletteEntry = _config.palette[tile.typeIndex];
+                            brick.SetHealth(paletteEntry.health > 0 ? paletteEntry.health : tile.typeIndex + 1);
+                            brick.SetColor(paletteEntry.editorColor);
 
                             if (tile.hasPowerUp)
                             {
