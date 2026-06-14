@@ -13,6 +13,12 @@ namespace ArkanoidCloneProject.Paddle
         private float _minX;
         private float _maxX;
         private bool _isPaused;
+        private Vector3 _originalScale;
+
+        private void Awake()
+        {
+            _originalScale = transform.localScale;
+        }
 
         public void Initialize(IInputManager inputManager, float minX, float maxX)
         {
@@ -96,6 +102,13 @@ namespace ArkanoidCloneProject.Paddle
         public void Resume()
         {
             _isPaused = false;
+        }
+
+        public void SetSizeMultiplier(float multiplier)
+        {
+            var scale = _originalScale;
+            scale.x *= multiplier;
+            transform.localScale = scale;
         }
     }
 }

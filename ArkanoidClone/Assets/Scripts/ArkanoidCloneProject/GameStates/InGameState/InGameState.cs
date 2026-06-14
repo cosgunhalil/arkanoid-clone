@@ -3,6 +3,7 @@ using ArkanoidCloneProject.Paddle;
 using ArkanoidCloneProject.Physics;
 using ArkanoidCloneProject.Player;
 using ArkanoidCloneProject.InputSystem;
+using ArkanoidCloneProject.PowerUp;
 using ArkanoidCloneProject.UserInterface;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace ArkanoidProject.State
         [Inject] private BrickManager _brickManager;
         [Inject] private PlayerHealth _playerHealth;
         [Inject] private InGameHUDPresenter _hudPresenter;
+        [Inject] private PowerUpManager _powerUpManager;
 
         private bool _isTransitioningToPause;
         private bool _isTransitioningLevel;
@@ -147,6 +149,7 @@ namespace ArkanoidProject.State
 
             _ballManager.RemoveAllBalls();
             _brickManager.UnregisterAllBricks();
+            _powerUpManager.ClearAllEffects();
             _paddlePlacer.RemovePaddle();
             _levelCreator.ClearLevel();
         }

@@ -6,6 +6,7 @@ using ArkanoidCloneProject.LevelEditor;
 using ArkanoidCloneProject.Paddle;
 using ArkanoidCloneProject.Physics;
 using ArkanoidCloneProject.Player;
+using ArkanoidCloneProject.PowerUp;
 using ArkanoidCloneProject.UserInterface;
 using ArkanoidProject.State;
 using UnityEngine;
@@ -62,6 +63,7 @@ namespace ArkanoidCloneProject.LifetimeScope
 
             builder.Register<PlayerHealth>(Lifetime.Singleton).WithParameter(playerStartHealth);
             builder.Register<InGameHUDPresenter>(Lifetime.Singleton);
+            builder.Register<PowerUpManager>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
             BallInstaller.Install(builder, ballSettings, ballPrefab);
 

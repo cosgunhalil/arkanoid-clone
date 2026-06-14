@@ -1,0 +1,25 @@
+{
+    "name": "arkanoid.powerup",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ee372cccbb9d42a4f9772c6e22b76556",
+        "GUID:75e878b6ba7a45648a31cffe83bf7ac9",
+        "GUID:cbe0133cd4ce63248908c8ccd7281b42",
+        "GUID:a15d4106a1b60a5449fc3b972bf1967d",
+        "GUID:96911ae0b2288d64abf907e948d1ec68",
+        "GUID:334a7d2c53bdd0f4cad1a115fa505019",
+        "GUID:c5f93ea513a193749ad3309c1afc8fd9",
+        "GUID:7d39bd3597c05684594dd052aa468992",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:c999255cd3ea5b944aae0b02cde8f19d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

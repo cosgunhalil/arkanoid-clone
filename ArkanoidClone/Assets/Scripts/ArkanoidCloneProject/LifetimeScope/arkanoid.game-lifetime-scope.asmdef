@@ -25,7 +25,8 @@
     "arkanoid-clone.ui.end-game",
     "arkanoid.health-system",
     "arkanoid-clone.ui.in-game",
-    "arkanoid-clone.ui.in-game-hud-presenter"
+    "arkanoid-clone.ui.in-game-hud-presenter",
+    "arkanoid.powerup"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

@@ -57,6 +57,17 @@ namespace ArkanoidCloneProject.Physics
             return SpawnBall(spawnPosition, paddle);
         }
 
+        public Ball.Ball SpawnAndLaunchBall(Vector2 position, Vector2 direction)
+        {
+            Ball.Ball ball = _ballFactory.Create(position);
+            ball.OnBallDeath += () => HandleBallDeath(ball);
+            _activeBalls.Add(ball);
+            ball.SetSpeed(_settings.BallSpeed);
+            ball.Launch(direction);
+            OnBallSpawned?.Invoke(ball);
+            return ball;
+        }
+
         public void LaunchBall(Ball.Ball ball)
         {
             ball.Launch();

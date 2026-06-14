@@ -1,3 +1,6 @@
 {
-  "name": "arkanoid.brick"
+  "name": "arkanoid.brick",
+  "references": [
+    "arkanoid.powerup-type"
+  ]
 }

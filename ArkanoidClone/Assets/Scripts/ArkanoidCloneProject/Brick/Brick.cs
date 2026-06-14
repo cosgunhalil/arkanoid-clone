@@ -1,4 +1,5 @@
 using System;
+using ArkanoidCloneProject.PowerUp;
 using UnityEngine;
 
 namespace ArkanoidCloneProject.Physics
@@ -12,12 +13,15 @@ namespace ArkanoidCloneProject.Physics
         private int _currentHealth;
         private int _health;
         private Color _originalColor;
+        private PowerUpType? _powerUpType;
 
         public event Action<Brick> OnBrickDestroyed;
         public event Action<Brick, int> OnBrickDamaged;
 
         public int Health => _currentHealth;
         public int ScoreValue => _scoreValue;
+        public bool HasPowerUp => _powerUpType.HasValue;
+        public PowerUpType PowerUpType => _powerUpType.GetValueOrDefault();
 
         private void Awake()
         {
@@ -82,7 +86,8 @@ namespace ArkanoidCloneProject.Physics
 
         public void SetRandomPowerUp()
         {
-            //TODO: implement!
+            var values = (PowerUpType[])Enum.GetValues(typeof(PowerUpType));
+            _powerUpType = values[UnityEngine.Random.Range(0, values.Length)];
         }
     }
 }
