@@ -1,149 +1,153 @@
-# Arkanoid Clone – A Unity Architecture Example
+# Arkanoid Clone — Advanced Unity Architecture Sample
 
-This repository contains a small Arkanoid style game created to demonstrate how a Unity project can be structured in a clean and maintainable way.
-
-The game itself is intentionally simple.  
-The main purpose of this project is to share architectural ideas and practical patterns that can be useful in real production environments.
-
-This project is open source and meant to be read, explored, and changed.
+A 2D Arkanoid clone built as an **architecture reference**, demonstrating how to structure a Unity game around dependency injection, a hierarchical state machine, and strict assembly isolation. The gameplay is intentionally simple; the value is in the patterns.
 
 ---
 
-## Why This Project Exists
+## Architecture Overview
 
-Many Unity projects start small and grow without a clear structure.  
-Over time this often leads to tightly coupled systems, difficult debugging, and features that are hard to extend.
-
-This project tries to show an alternative approach by applying architectural decisions from the very beginning, even for a simple game.
-
-The goal is not to present a perfect solution, but to share one possible way of organizing a Unity project with care.
-
----
-
-## General Approach
-
-While building this project, a few principles were kept in mind:
-
-- Systems should have clear responsibilities  
-- Dependencies should be explicit  
-- Game flow should be easy to follow  
-- Data should be separated from logic  
-- Editor tools should support the workflow  
-
-These ideas guide the structure more than any specific pattern or library.
-
----
-
-## Dependency Injection
-
-VContainer is used to manage dependencies.
-
-Instead of creating or searching for objects at runtime, systems receive what they need through injection.  
-This helps make relationships between systems clearer and reduces hidden coupling.
-
-All registrations are done in a single LifetimeScope, which makes it easier to understand how the application is composed.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        GameLifetimeScope                        │
+│  (VContainer root — all services registered here)               │
+│                                                                 │
+│  ┌──────────────┐   ┌─────────────────┐   ┌─────────────────┐  │
+│  │  AppState    │   │   BallManager   │   │  BrickManager   │  │
+│  │  (HSM root)  │   │                 │   │                 │  │
+│  │              │   │  SpawnBall()    │   │  OnBrickDest-   │  │
+│  │  ┌─────────┐ │   │  SpawnAndLaunch │   │  royed event    │  │
+│  │  │MainMenu │ │   │  RemoveAll()    │   │  OnAllBricksD-  │  │
+│  │  ├─────────┤ │   └────────┬────────┘   │  estroyed event │  │
+│  │  │Prepare  │ │            │            └────────┬────────┘  │
+│  │  ├─────────┤ │            │                     │           │
+│  │  │InGame ◄─┼─┼────────────┴─────────────────────┘           │
+│  │  ├─────────┤ │                                               │
+│  │  │ Pause  │ │   ┌─────────────────┐   ┌─────────────────┐   │
+│  │  ├─────────┤ │   │  PowerUpManager │   │ CameraShake-    │   │
+│  │  │ EndGame │ │   │  (ITickable)    │   │ Controller      │   │
+│  │  └─────────┘ │   └─────────────────┘   └─────────────────┘   │
+│  └──────────────┘                                               │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Flow Management
+## Key Patterns
 
-Game flow is handled using a state machine based architecture.
+### 1 — VContainer Dependency Injection
 
-There is a root application state that manages high level states such as:
+`GameLifetimeScope` (`LifetimeScope/`) is the single VContainer root. Every system is registered there and resolved via constructor injection:
 
-- Main menu  
-- In game  
-- Pause  
-- End game  
+```csharp
+// Plain C# class — constructor injection
+public class BallManager
+{
+    [Inject]
+    public BallManager(IBallFactory factory, BallSettings settings, CameraManager camera) { ... }
+}
 
-Transitions between states are explicit and event driven.  
-Gameplay systems do not control the flow directly.  
-They only notify when something has happened.
+// MonoBehaviour — field injection with [Inject]
+public class PrepareGameState : StateMachine
+{
+    [Inject] private LevelCreator _levelCreator;
+    [Inject] private PaddlePlacer _paddlePlacer;
+    ...
+}
+```
 
-This keeps flow logic in one place and makes it easier to reason about.
+Classes that need a per-frame update implement **`ITickable`** instead of using `MonoBehaviour.Update()`, and are registered with `.AsImplementedInterfaces()` so VContainer drives them:
 
----
+```csharp
+builder.Register<PowerUpManager>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+// PowerUpManager : ITickable, IDisposable
+```
 
-## Level Management
-
-Levels are data driven and stored as JSON files.
-
-- Levels are loaded using Addressables  
-- A LevelCollection defines the order of levels  
-- Level data is separate from gameplay logic  
-
-A custom level editor is included to create and manage levels inside the Unity Editor.  
-This allows iteration without touching code and keeps level creation consistent.
-
----
-
-## Gameplay Systems
-
-Gameplay is divided into small, focused systems.
-
-For example:
-
-- The ball handles only movement and collisions  
-- The ball manager handles ball lifecycle  
-- The brick manager tracks bricks and score  
-- Input is abstracted behind an interface  
-
-Each system does one thing and communicates through events or injected dependencies.
+States are created through **`VContainerStateFactory`** so the resolver wires their dependencies automatically — no manual `new` calls anywhere in game flow.
 
 ---
 
-## Factories
+### 2 — Hierarchical State Machine
 
-Object creation is handled through factories.
+`Assets/Scripts/HSM/StateMachine.cs` (`Devkit.HSM`) is a hand-rolled hierarchical state machine. `AppState` builds the full transition graph in `OnEnter()`:
 
-Factories are responsible for instantiating prefabs and injecting dependencies.  
-This keeps creation logic out of gameplay systems and makes it easier to change how objects are created later.
+```
+MainMenuState ──[START_GAME_REQUEST]──► PrepareGameState
+PrepareGameState ──[PREPARE_COMPLETE]──► InGameState
+InGameState ──[PAUSE_GAME_REQUEST]──► PauseGameState
+PauseGameState ──[CONTINUE_GAME_REQUEST]──► InGameState
+InGameState ──[GAME_OVER_REQUEST]──► EndGameState
+EndGameState ──[RETRY_GAME_REQUEST]──► InGameState
+```
 
----
-
-## Assembly Definitions
-
-Assembly definition files are used to define boundaries between modules.
-
-This helps:
-
-- Reduce compile times  
-- Prevent accidental dependencies  
-- Encourage clearer separation of concerns  
-
-They are used here as a learning tool as much as a technical one.
+Transitions fire from anywhere with `SendTrigger((int)StateTriggers.SOME_TRIGGER)`. States override `OnEnter()` / `OnExit()` — never polling, never checking state flags in `Update()`.
 
 ---
 
-## Folder Structure
+### 3 — Assembly Definitions
 
-The folder structure is organized by responsibility rather than by Unity defaults.
+Every script folder has its own `.asmdef`. This enforces dependency direction at compile time — Unity refuses to build if a reference cycle forms.
 
-Runtime code, editor tools, data, and configuration are separated so that each area stays focused on its purpose.
+**Rule:** reference by assembly name string, not GUID, when possible:
+```json
+{
+  "name": "arkanoid.powerup",
+  "references": [ "arkanoid.powerup-type", "arkanoid.brick", "arkanoid.brick-manager", ... ]
+}
+```
 
-There is no single correct structure, but this layout aims to stay readable as the project grows.
+**Handling circular dependencies:** when two assemblies would otherwise reference each other, extract the shared type into a third, no-dependency assembly.  
+Example: `Brick` needs `PowerUpType`, and `PowerUp` needs `Brick` — solved by `PowerUpType/arkanoid.powerup-type.asmdef` (no references), which both sides reference:
+
+```
+arkanoid.powerup-type   (no deps)
+      ▲              ▲
+arkanoid.brick    arkanoid.powerup
+```
 
 ---
 
-## How To Explore The Project
+## Systems at a Glance
 
-A suggested way to learn from this repository:
-
-- Run the project and observe the game flow  
-- Read the state machine code first  
-- Follow how dependencies are registered and injected  
-- Look at how levels are created and loaded  
-- Make small changes and see how the system reacts  
-
-Understanding comes best by experimenting.
+| System | Type | Key responsibility |
+|---|---|---|
+| `BallManager` | Plain C# | Owns all `Ball` instances; spawn, launch, lifecycle |
+| `BrickManager` | Plain C# | Tracks active bricks; fires `OnBrickDestroyed`, `OnAllBricksDestroyed` |
+| `PowerUpManager` | Plain C# / ITickable | Spawns pickups on brick death; ticks timed effects; reverts on expiry |
+| `CameraShakeController` | Plain C# / IDisposable | Subscribes to events; calls `CameraManager.Shake()` |
+| `BrickExplosionController` | Plain C# / IDisposable | Spawns GPU shader effect on brick death via shared `Material` + `MaterialPropertyBlock` |
+| `LevelCreator` | MonoBehaviour | Loads level JSON via Addressables; instantiates `Brick` components at runtime |
+| `PaddlePlacer` | Plain C# | Creates and repositions the paddle; recalculates movement bounds after size changes |
+| `CameraManager` | MonoBehaviour | Orthographic fit to level bounds; runs screen shake offset in `Update()` |
 
 ---
 
-## Closing Notes
+## Adding Things
 
-This project represents one way of approaching Unity architecture.  
-It is not meant to be followed blindly or treated as a final answer.
+**New power-up**
+1. Add a value to `PowerUpType` enum (`PowerUpType/PowerUpType.cs`)
+2. Create a class implementing `IPowerUpEffect` in `PowerUp/Effects/`
+3. Add a case to `PowerUpManager.CreateEffect()`
 
-If it helps you think more carefully about structure, responsibilities, and flow, then it has achieved its purpose.
+**New game state**
+1. Create a class extending `StateMachine` in `GameStates/`
+2. Add `[Inject]` fields for dependencies
+3. Register it as `Lifetime.Transient` in `GameLifetimeScope`
+4. Wire a transition in `AppState.BuildHierarchy()`
 
-Contributions, questions, and discussions are always welcome.
+**New system that needs per-frame update**
+1. Implement `ITickable` (and `IDisposable` if it subscribes to events)
+2. Register with `.AsImplementedInterfaces()` in `GameLifetimeScope`
+3. No `MonoBehaviour` needed
+
+---
+
+## Tech Stack
+
+| | |
+|---|---|
+| Engine | Unity 2D (URP) |
+| DI | [VContainer](https://github.com/hadashiA/VContainer) 1.17.0 |
+| Async | [UniTask](https://github.com/Cysharp/UniTask) |
+| Asset loading | Unity Addressables 2.7.6 |
+| Input | Unity Input System 1.16.0 |
+| Shader | Custom HLSL (URP Unlit + built-in fallback) |
