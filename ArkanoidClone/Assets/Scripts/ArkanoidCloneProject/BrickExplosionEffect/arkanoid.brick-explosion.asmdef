@@ -1,0 +1,19 @@
+{
+    "name": "arkanoid.brick-explosion",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ee372cccbb9d42a4f9772c6e22b76556",
+        "GUID:cbe0133cd4ce63248908c8ccd7281b42",
+        "GUID:a15d4106a1b60a5449fc3b972bf1967d",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

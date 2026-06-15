@@ -27,7 +27,8 @@
     "arkanoid-clone.ui.in-game",
     "arkanoid-clone.ui.in-game-hud-presenter",
     "arkanoid.powerup",
-    "arkanoid.camera-shake-controller"
+    "arkanoid.camera-shake-controller",
+    "arkanoid.brick-explosion"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
