@@ -10,9 +10,18 @@ namespace ArkanoidCloneProject.LevelEditor
         [SerializeField] private float _rightMargin = 1f;
         [SerializeField] private float _topMargin = 1f;
         [SerializeField] private float _bottomMargin = 1f;
-        private LevelBounds _boundsWithMargins;
 
+        [Header("Screen Shake")]
+        [SerializeField] private float _defaultShakeIntensity = 0.15f;
+        [SerializeField] private float _defaultShakeDuration = 0.25f;
+
+        private LevelBounds _boundsWithMargins;
         private LevelBounds _currentBounds;
+
+        private Vector3 _basePosition;
+        private float _shakeIntensity;
+        private float _shakeDuration;
+        private float _shakeTimeRemaining;
 
         public LevelBounds BoundsWithMargins => _boundsWithMargins;
         public Vector2 PlayableAreaCenter => _boundsWithMargins.Center;
@@ -65,14 +74,41 @@ namespace ArkanoidCloneProject.LevelEditor
             _boundsWithMargins = new LevelBounds(topLeft, topRight, bottomLeft, bottomRight);
         }
 
+        private void Update()
+        {
+            if (_shakeTimeRemaining > 0f)
+            {
+                _shakeTimeRemaining -= Time.deltaTime;
+                _camera.transform.position = _basePosition + ShakeOffset();
+            }
+        }
+
+        public void Shake(float intensity, float duration)
+        {
+            _shakeIntensity = intensity;
+            _shakeDuration = duration;
+            _shakeTimeRemaining = duration;
+        }
+
+        public void Shake() => Shake(_defaultShakeIntensity, _defaultShakeDuration);
+
+        private Vector3 ShakeOffset()
+        {
+            if (_shakeTimeRemaining <= 0f) return Vector3.zero;
+            float t = _shakeTimeRemaining / _shakeDuration;
+            return (Vector3)(UnityEngine.Random.insideUnitCircle * (_shakeIntensity * t));
+        }
+
         private void AdjustCameraToFitBounds()
         {
             if (_camera == null) return;
 
-            var cameraPosition = _camera.transform.position;
-            cameraPosition.x = _boundsWithMargins.Center.x;
-            cameraPosition.y = _boundsWithMargins.Center.y;
-            _camera.transform.position = cameraPosition;
+            _basePosition = new Vector3(
+                _boundsWithMargins.Center.x,
+                _boundsWithMargins.Center.y,
+                _camera.transform.position.z
+            );
+            _camera.transform.position = _basePosition + ShakeOffset();
 
             if (_camera.orthographic)
             {

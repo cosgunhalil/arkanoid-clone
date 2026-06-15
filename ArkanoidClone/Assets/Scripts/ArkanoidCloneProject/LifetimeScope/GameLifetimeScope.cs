@@ -1,3 +1,4 @@
+using ArkanoidCloneProject.Camera;
 using ArkanoidCloneProject.Controllers.Scripts;
 using ArkanoidCloneProject.Factories.StateFactory;
 using ArkanoidCloneProject.GameStates.PrepareGameState;
@@ -64,6 +65,7 @@ namespace ArkanoidCloneProject.LifetimeScope
             builder.Register<PlayerHealth>(Lifetime.Singleton).WithParameter(playerStartHealth);
             builder.Register<InGameHUDPresenter>(Lifetime.Singleton);
             builder.Register<PowerUpManager>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            builder.Register<CameraShakeController>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
             BallInstaller.Install(builder, ballSettings, ballPrefab);
 
